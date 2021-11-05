@@ -11,7 +11,7 @@ namespace ft
 // creation d'un template iterator pour tout les types d'iterator
 	template<class Category, class T, class Distance = std::ptrdiff_t,
 			class Pointer = T*, class Reference = T&>
-	struct iterator {
+	struct iterator_traits {
 		typedef T			value_type;
 		typedef Distance	difference_type;
 		typedef Pointer		pointer;
@@ -26,43 +26,54 @@ namespace ft
 	struct random_access_iterator_tag: public bidirectional_iterator_tag {};
 
 	template<class T>
-	class input_iterator : public ft::iterator<input_iterator_tag, T> {
+	class base_iterator {
 		/* common to all iterator */
-		iterator( const iterator& );
-		~iterator( void );
-		iterator&	operator=( const iterator& );
+		iterator( const base_iterator& ); // constructeur par copie
+		~iterator( void ); // constructeur par défaut
+		iterator&	operator=( const iterator& ); // pb avoir assigmnment operator en pour input
 		iterator&	operator++( void ); // prefix increment
-		iterator&	operator++( int ); // postfix increment
-
-		/* input_iterator specific */
-		bool	operator==(iterator const &rhs) const;
-		bool	operator!=(iterator const &rhs) const;
-		iterator&	operator*( void );
-		iterator*	operator->( void );
+		iterator	operator++( int ); // postfix increment
 	};
 
-	class output_iterator : public ft::iterator<output_iterator_tag, T> {
-		iterator
-
+	template<class T>
+	class input_iterator : public base_iterator, public ft::iterator_traits<input_iterator_tag, T> {
+		bool	operator==(input_iterator const &rhs) const;
+		bool	operator!=(input_iterator const &rhs) const;
+		input_iterator&	operator*( void );
+		input_iterator*	operator->( void );
 	};
-// 	operator*
-// operator->
-// operator=
-	// bool	operator==( Fixed const &rhs ) const;
-	// bool	operator!=( Fixed const &rhs ) const;
-	// bool	operator<( Fixed const &rhs ) const;
-	// bool	operator>( Fixed const &rhs ) const;
-	// bool	operator<=( Fixed const &rhs ) const;
-	// bool	operator>=( Fixed const &rhs ) const;
-	// Fixed	operator+( Fixed const &rhs );	
-	// Fixed	operator-( Fixed const &rhs );
-	// Fixed	operator*( Fixed const &rhs );
-	// Fixed	operator/( Fixed const & rhs );
-	// Fixed	&operator++( void ); // Prefix increment operator.
-	// Fixed	operator++(int); // Postfix increment operator.
-	// Fixed	&operator--( void );
-	// Fixed	operator--(int);
 
+	template<class T>
+	class output_iterator : public base_iterator, public ft::iterator_traits<output_iterator_tag, T> {
+		output_iterator&	operator*( void );
+		output_iterator*	operator->( void );
+	};
+
+	template<class T>
+	class forward_iterator : public input_iterator, public output_iterator, public ft::iterator_traits<forward_iterator_tag, T> {
+		iterator( void ); // constructeur par défaut
+	};
+
+	template<class T>
+	class bidirectionnal_iterator : public forward_iterator, public ft::iterator_traits<bidirectional_iterator_tag, T> {
+		bidirectionnal_iterator&	operator--( void ); // prefix decrement
+		bidirectionnal_iterator	operator--( int ); // postfix decrement
+	};
+
+	template<class T>
+	class random_access_iterator : public bidirectionnal_iterator, public ft::iterator_traits<random_access_iterator_tag, T> {
+		bool	operator<( random_access_iterator const &rhs ) const;
+		bool	operator>( random_access_iterator const &rhs ) const;
+		bool	operator<=( random_access_iterator const &rhs ) const;
+		bool	operator>=( random_access_iterator const &rhs ) const;
+		random_access_iterator	operator+( random_access_iterator const &rhs );
+		random_access_iterator	operator-( random_access_iterator const &rhs );
+		// iterator	operator+( const &T ); // a verifier mais potentiellement reponse a It + 1;
+		// iterator	operator+( const &T );
+		random_access_iterator&	operator+=( random_access_iterator const &rhs );
+		random_access_iterator&	operator-=( random_access_iterator const &rhs );
+		random_access_iterator&	operator[]( random_access_iterator const &rhs );
+	};
 
 }
 
