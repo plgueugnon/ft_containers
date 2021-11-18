@@ -15,7 +15,7 @@ template<class T> struct iterator_traits<const T*>; // specialisation class cons
 // creation d'un template iterator pour tout les types d'iterator
 	template<class Category, class T, class Distance = std::ptrdiff_t,
 			class Pointer = T*, class Reference = T&>
-	struct iterator_traits {
+	struct iterator {
 		typedef T			value_type;
 		typedef Distance	difference_type;
 		typedef Pointer		pointer;
@@ -24,7 +24,8 @@ template<class T> struct iterator_traits<const T*>; // specialisation class cons
 	};
 
 	// template generique des iterators
-	template<class Iterator> struct iterator_traits {
+	template<class Iterator>
+	struct iterator_traits {
 		typedef typename Iterator::difference_type difference_type;
 		typedef typename Iterator::value_type value_type;
 		typedef typename Iterator::pointer pointer;
@@ -39,7 +40,8 @@ template<class T> struct iterator_traits<const T*>; // specialisation class cons
 	struct random_access_iterator_tag: public bidirectional_iterator_tag {};
 
 	// template specialization for raw pointer
-	template<class T> struct iterator_traits<T*> {
+	template<class T>
+	struct iterator_traits<T*> {
 		typedef ptrdiff_t difference_type;
 		typedef T value_type;
 		typedef T* pointer;
@@ -48,7 +50,8 @@ template<class T> struct iterator_traits<const T*>; // specialisation class cons
 	};
 
 	// template specialization for const pointer
-	template<class T> struct iterator_traits<const T*> {
+	template<class T>
+	struct iterator_traits<const T*> {
 		typedef ptrdiff_t difference_type;
 		typedef T value_type;
 		typedef const T* pointer;
