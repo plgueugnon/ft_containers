@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: pgueugno <marvin@42.fr>                    +#+  +:+       +#+         #
+#    By: pgueugno <pgueugno@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/01/21 14:58:12 by pgueugno          #+#    #+#              #
-#    Updated: 2021/08/11 13:07:06 by pgueugno         ###   ########.fr        #
+#    Updated: 2021/11/18 14:18:18 by pgueugno         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -28,14 +28,14 @@ LIBFT_MAKE	=	Makefile
 #                               Sources filenames                              #
 ################################################################################
 
-SRCS		=	main.cpp
+SRCS		=	main_it_test.cpp
 
 ################################################################################
 #                              Commands and arguments                          #
 ################################################################################
 
 CC			=	clang++
-CFLAGS		=	-Wall -Wextra -Werror -g3 -std=c++98 -fsanitize=address
+CFLAGS		=	-Wall -Wextra -Werror -g3 -std=c++98 #-fsanitize=address
 RM			=	rm -f
 
 ################################################################################

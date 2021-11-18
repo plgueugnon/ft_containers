@@ -18,13 +18,12 @@ namespace ft
 		typedef typename ft::iterator<ft::random_access_iterator_tag, T>::iterator_category iterator_category;
 
 	protected:
-		pointer _ptr; // error de type a fix
-		// typedef ft::iterator_traits<T> rai;
+		pointer _ptr;
 
 	public:
 		/* canonical form */
 		random_access_iterator( void ) : _ptr(NULL) { return ; }
-		random_access_iterator( random_access_iterator const &src ) : _ptr(src) { return ; }
+		random_access_iterator( random_access_iterator const &src ) : _ptr(src._ptr) { return ; }
 		~random_access_iterator( void ) { return ; }
 		random_access_iterator	&operator=( random_access_iterator const &src )
 		{
@@ -123,50 +122,44 @@ namespace ft
 			return ( *(_ptr + n) );
 		}
 
+		friend ft::random_access_iterator<T>	operator+( size_t n, ft::random_access_iterator<T> const &rhs ) // cas n + a
+		{
+			return ( n + rhs._ptr );
+		}
+
+		/*
+		specific case of the STL which state that a subtraction between two iterators should be possible
+		the return value is difference type = a - b
+		https://www.cplusplus.com/reference/iterator/RandomAccessIterator/
+		https://en.cppreference.com/w/cpp/named_req/RandomAccessIterator 
+		*/
+		friend typename ft::random_access_iterator<T>::difference_type	operator-( ft::random_access_iterator<T> const &lhs, ft::random_access_iterator<T> const &rhs )
+		{
+			return ( lhs._ptr - rhs._ptr );
+		}
+
+		friend bool	operator<( ft::random_access_iterator<T> const &lhs, ft::random_access_iterator<T> const &rhs )
+		{
+			return ( lhs._ptr < rhs._ptr );
+		}
+
+		friend bool	operator>( ft::random_access_iterator<T> const &lhs, ft::random_access_iterator<T> const &rhs )
+		{
+			return ( lhs._ptr > rhs._ptr );
+		}
+
+		friend bool	operator<=( ft::random_access_iterator<T> const &lhs, ft::random_access_iterator<T> const &rhs )
+		{
+			return ( lhs._ptr <= rhs._ptr );
+		}
+
+		friend bool	operator>=( ft::random_access_iterator<T> const &lhs, ft::random_access_iterator<T> const &rhs )
+		{
+			return ( lhs._ptr >= rhs._ptr );
+		}
+
 	};
-	// potentielle solution pour contourner le pb du keyword friend = créer overload de fonctions
-	// si marche pas ici, tenter overload des fonctions dans class vector directement
-	template<typename T>
-	ft::random_access_iterator<T>	operator+( size_t n, ft::random_access_iterator<T> const &rhs ) // cas n + a
-	{
-		return ( n + rhs._ptr );
-	}
 
-	/*
-	specific case of the STL which state that a subtraction between two iterators should be possible
-	the return value is difference type = a - b
-	https://www.cplusplus.com/reference/iterator/RandomAccessIterator/
-	https://en.cppreference.com/w/cpp/named_req/RandomAccessIterator 
-	*/
-	template<typename T>
-	typename ft::random_access_iterator<T>::difference_type	operator-( ft::random_access_iterator<T> const &lhs, ft::random_access_iterator<T> const &rhs )
-	{
-		return ( lhs._ptr - rhs._ptr );
-	}
-
-	template<typename T>
-	bool	operator<( ft::random_access_iterator<T> const &lhs, ft::random_access_iterator<T> const &rhs )
-	{
-		return ( lhs._ptr < rhs._ptr );
-	}
-
-	template<typename T>
-	bool	operator>( ft::random_access_iterator<T> const &lhs, ft::random_access_iterator<T> const &rhs )
-	{
-		return ( lhs._ptr > rhs._ptr );
-	}
-
-	template<typename T>
-	bool	operator<=( ft::random_access_iterator<T> const &lhs, ft::random_access_iterator<T> const &rhs )
-	{
-		return ( lhs._ptr <= rhs._ptr );
-	}
-
-	template<typename T>
-	bool	operator>=( ft::random_access_iterator<T> const &lhs, ft::random_access_iterator<T> const &rhs )
-	{
-		return ( lhs._ptr >= rhs._ptr )
-	}
 	// a voir si preferable de les rajouter
 		// bool	operator==( random_access_iterator const &rhs ) const;
 		// bool	operator!=( random_access_iterator const &rhs ) const;
