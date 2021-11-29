@@ -85,56 +85,6 @@ template<class T> struct iterator_traits<const T*>; // specialisation class cons
 	template<> struct iterator_traits<unsigned long>{};
 	template<> struct iterator_traits<unsigned long long>{};
 
-	// template<class T>
-	// class base_iterator {
-	// 	/* common to all iterator */
-	// 	iterator( const base_iterator& ); // constructeur par copie
-	// 	~iterator( void ); // constructeur par défaut
-	// 	iterator&	operator=( const iterator& ); // pb avoir assigmnment operator en pour input
-	// 	iterator&	operator++( void ); // prefix increment
-	// 	iterator	operator++( int ); // postfix increment
-	// };
-
-	// template<class T>
-	// class input_iterator : public base_iterator, public ft::iterator_traits<input_iterator_tag, T> {
-	// 	bool	operator==(input_iterator const &rhs) const;
-	// 	bool	operator!=(input_iterator const &rhs) const;
-	// 	input_iterator&	operator*( void );
-	// 	input_iterator*	operator->( void );
-	// };
-
-	// template<class T>
-	// class output_iterator : public base_iterator, public ft::iterator_traits<output_iterator_tag, T> {
-	// 	output_iterator&	operator*( void );
-	// 	output_iterator*	operator->( void );
-	// };
-
-	// template<class T>
-	// class forward_iterator : public input_iterator, public output_iterator, public ft::iterator_traits<forward_iterator_tag, T> {
-	// 	iterator( void ); // constructeur par défaut
-	// };
-
-	// template<class T>
-	// class bidirectionnal_iterator : public forward_iterator, public ft::iterator_traits<bidirectional_iterator_tag, T> {
-	// 	bidirectionnal_iterator&	operator--( void ); // prefix decrement
-	// 	bidirectionnal_iterator	operator--( int ); // postfix decrement
-	// };
-
-	// template<class T>
-	// class random_access_iterator : public bidirectionnal_iterator, public ft::iterator_traits<random_access_iterator_tag, T> {
-	// 	bool	operator<( random_access_iterator const &rhs ) const;
-	// 	bool	operator>( random_access_iterator const &rhs ) const;
-	// 	bool	operator<=( random_access_iterator const &rhs ) const;
-	// 	bool	operator>=( random_access_iterator const &rhs ) const;
-	// 	random_access_iterator	operator+( random_access_iterator const &rhs );
-	// 	random_access_iterator	operator-( random_access_iterator const &rhs );
-	// 	// iterator	operator+( const &T ); // a verifier mais potentiellement reponse a It + 1;
-	// 	// iterator	operator+( const &T );
-	// 	random_access_iterator&	operator+=( random_access_iterator const &rhs );
-	// 	random_access_iterator&	operator-=( random_access_iterator const &rhs );
-	// 	random_access_iterator&	operator[]( random_access_iterator const &rhs );
-	// };
-
 }
 
 #endif // __ITERATOR_H__
