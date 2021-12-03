@@ -6,7 +6,7 @@
 #    By: pgueugno <pgueugno@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/01/21 14:58:12 by pgueugno          #+#    #+#              #
-#    Updated: 2021/11/18 14:18:18 by pgueugno         ###   ########.fr        #
+#    Updated: 2021/12/03 10:00:46 by pgueugno         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -34,9 +34,9 @@ SRCS		=	main_it_test.cpp
 #                              Commands and arguments                          #
 ################################################################################
 
-CC			=	clang++
-CFLAGS		=	-Wall -Wextra -Werror -g3 -std=c++98 #-fsanitize=address
-RM			=	rm -f
+CXX				=	clang++
+CXXFLAGS		=	-Wall -Wextra -Werror -g3 -std=c++98 #-fsanitize=address
+RM				=	rm -f
 
 ################################################################################
 #                                 Defining colors                              #
@@ -65,11 +65,11 @@ init:
 
 $(OBJS_DIR)/%.o: $(SRCS_DIR)/%.cpp
 				@ echo "\t$(_YELLOW) compiling... $*.cpp$(_NC)"
-				$(CC) $(CFLAGS) -c $< -o $@
+				$(CXX) $(CXXFLAGS) -c $< -o $@
 
 $(NAME):	$(OBJS)
 			@ echo "\t$(_YELLOW)[Creating program]$(_NC)"
-			$(CC) $(OBJS) -o $(NAME) -fsanitize=address
+			$(CXX) $(OBJS) -o $(NAME) -fsanitize=address
 			@ echo "$(_GREEN)[program created & ready]$(_NC)"
 
 clean:

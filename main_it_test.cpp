@@ -20,13 +20,17 @@ int	main(void)
 	if (d != z)
 		std::cout << "is not equal !" << std::endl;
 
-	ft::random_access_iterator<float> y;
+	// faire un ptr void *, le caster en iterateur et essayer de faire marcher
+	// si marche pas devrait se voir
+
+	ft::random_access_iterator<float *> y;
 	std::cout << d - z << std::endl;
 
 	std::vector<float>	tab;
 	std::vector<float>::iterator beg = tab.begin();
 	std::vector<float>::iterator end = tab.end();
 	end - beg; // compile avec des types float ?
-
+	float *	ptr;
+	
 	return (0);
 }
