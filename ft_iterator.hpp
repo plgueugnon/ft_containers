@@ -1,5 +1,5 @@
-#ifndef __ITERATOR_H__
-#define __ITERATOR_H__
+#ifndef __FT_ITERATOR_H__
+#define __FT_ITERATOR_H__
 
 #include <cstddef>
 
@@ -61,4 +61,4 @@ template<class T> struct iterator_traits<const T*>; // specialisation class cons
 
 }
 
-#endif // __ITERATOR_H__
+#endif // __FT_ITERATOR_H__
