@@ -8,9 +8,15 @@ namespace ft
 
 /* https://stackoverflow.com/questions/8054273/how-to-implement-an-stl-style-iterator-and-avoid-common-pitfalls */
 
-template<class Iterator> struct iterator_traits; // general class / fwd declaration
-template<class T> struct iterator_traits<T*>; // specialisation class raw / fwd declaration
-template<class T> struct iterator_traits<const T*>; // specialisation class const / fwd declaration
+	// template<class Iterator> struct iterator_traits; // general class / fwd declaration
+	// template<class T> struct iterator_traits<T*>; // specialisation class raw / fwd declaration
+	// template<class T> struct iterator_traits<const T*>; // specialisation class const / fwd declaration
+
+	struct input_iterator_tag {};
+	struct output_iterator_tag {};
+	struct forward_iterator_tag: public input_iterator_tag {};
+	struct bidirectional_iterator_tag: public forward_iterator_tag {};
+	struct random_access_iterator_tag: public bidirectional_iterator_tag {};
 
 // creation d'un template iterator pour tout les types d'iterator
 	template<class Category, class T, class Distance = std::ptrdiff_t,
@@ -33,11 +39,6 @@ template<class T> struct iterator_traits<const T*>; // specialisation class cons
 		typedef typename Iterator::iterator_category iterator_category;
 	};
 
-	struct input_iterator_tag {};
-	struct output_iterator_tag {};
-	struct forward_iterator_tag: public input_iterator_tag {};
-	struct bidirectional_iterator_tag: public forward_iterator_tag {};
-	struct random_access_iterator_tag: public bidirectional_iterator_tag {};
 
 	// template specialization for raw pointer
 	template<class T>
@@ -46,7 +47,7 @@ template<class T> struct iterator_traits<const T*>; // specialisation class cons
 		typedef T value_type;
 		typedef T* pointer;
 		typedef T& reference;
-		typedef random_access_iterator_tag iterator_category;
+		typedef ft::random_access_iterator_tag iterator_category;
 	};
 
 	// template specialization for const pointer
@@ -56,7 +57,7 @@ template<class T> struct iterator_traits<const T*>; // specialisation class cons
 		typedef T value_type;
 		typedef const T* pointer;
 		typedef const T& reference;
-		typedef random_access_iterator_tag iterator_category;
+		typedef ft::random_access_iterator_tag iterator_category;
 	};
 
 }

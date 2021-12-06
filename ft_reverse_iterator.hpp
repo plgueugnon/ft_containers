@@ -2,6 +2,7 @@
 #define __FT_REVERSE_ITERATOR_H__
 
 #include "ft_iterator.hpp"
+#include "ft_random_access_iterator.hpp"
 
 namespace ft
 {
@@ -78,35 +79,35 @@ namespace ft
 		}
 		reference operator[]( difference_type n ) const { return ( _current[ -n -1 ] ); }
 
-		friend bool operator==( const ft::reverse_iterator<Iterator>& x, const ft::reverse_iterator<Iterator>& y);
+		friend bool operator==( const ft::reverse_iterator<Iterator>& x, const ft::reverse_iterator<Iterator>& y)
 		{
 			return ( x._current == y._current );
 		}
-		friend bool operator<( const reverse_iterator<Iterator>& x, const reverse_iterator<Iterator>& y);
+		friend bool operator<( const reverse_iterator<Iterator>& x, const reverse_iterator<Iterator>& y)
 		{
 			return ( x._current > y._current );
 		}
-		friend bool operator>( const reverse_iterator<Iterator>& x, const reverse_iterator<Iterator>& y);
+		friend bool operator>( const reverse_iterator<Iterator>& x, const reverse_iterator<Iterator>& y)
 		{
 			return ( x._current < y._current );
 		}
-		friend bool operator!=( const reverse_iterator<Iterator>& x, const reverse_iterator<Iterator>& y);
+		friend bool operator!=( const reverse_iterator<Iterator>& x, const reverse_iterator<Iterator>& y)
 		{
 			return ( x._current != y._current );
 		}
-		friend bool operator>=( const reverse_iterator<Iterator>& x, const reverse_iterator<Iterator>& y);
+		friend bool operator>=( const reverse_iterator<Iterator>& x, const reverse_iterator<Iterator>& y)
 		{
 			return ( x._current <= y._current );
 		}
-		friend bool operator<=( const reverse_iterator<Iterator>& x, const reverse_iterator<Iterator>& y);
+		friend bool operator<=( const reverse_iterator<Iterator>& x, const reverse_iterator<Iterator>& y)
 		{
 			return ( x._current >= y._current );
 		}
-		friend typename reverse_iterator<Iterator>::difference_type operator-( const reverse_iterator<Iterator>& x, const reverse_iterator<Iterator>& y);
+		friend typename reverse_iterator<Iterator>::difference_type operator-( const reverse_iterator<Iterator>& x, const reverse_iterator<Iterator>& y)
 		{
 			return ( y._current - x._current );
 		}
-		friend reverse_iterator<Iterator> operator+(typename reverse_iterator<Iterator>::difference_type n, const reverse_iterator<Iterator>& x);
+		friend reverse_iterator<Iterator> operator+(typename reverse_iterator<Iterator>::difference_type n, const reverse_iterator<Iterator>& x)
 		{
 			return ( reverse_iterator<Iterator>(x._current - n) );
 		}

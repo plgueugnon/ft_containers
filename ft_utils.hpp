@@ -1,6 +1,10 @@
 #ifndef __FT_UTILS_H__
 #define __FT_UTILS_H__
 
+#include "ft_iterator.hpp"
+#include "ft_random_access_iterator.hpp"
+#include "ft_type_resolution.hpp"
+
 namespace ft
 {
 	/* https://www.cplusplus.com/reference/algorithm/lexicographical_compare/ */
@@ -11,19 +15,28 @@ namespace ft
 		{
 			if ( first2 == last2 || *first2 < *first1 )
 				return ( false );
-			else if ( *first1 < *first 2)
+			else if ( *first1 < *first2)
 				return ( true );
 			++first1; ++first2;
 		}
 		return ( first2 != last2 );
 	}
 
+	// pas demandé
 	template <class T>
 	void swap ( T& a, T& b )
 	{
 		T c(a);
-		a=b;
-		b=c;
+		a = b;
+		b = c;
+	}
+
+	template <class T>
+	typename iterator_traits<T>::difference_type distance (T first, T last)
+	{
+		typename iterator_traits<T>::difference_type i = 0;
+		for (; first != last; ++first, ++i);
+		return i;
 	}
 
 }
