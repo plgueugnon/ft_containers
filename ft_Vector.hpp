@@ -1,6 +1,8 @@
 #ifndef __FT_VECTOR_H__
 #define __FT_VECTOR_H__
 
+#include <iostream> // a suppr
+
 #include <memory>
 #include "ft_random_access_iterator.hpp"
 #include "ft_reverse_iterator.hpp"
@@ -171,9 +173,9 @@ namespace ft {
 				pointer last_object = end(); // check si pas problème lié decalage
 				while ( last_object != begin() + offset )
 				{
-					_allocator.construct(last, *(last - 1));
-					_allocator.destroy(last);
-					--last;
+					_allocator.construct(last_object, *(last_object - 1));
+					_allocator.destroy(last_object);
+					--last_object;
 				}
 				for (size_type i = 0; first != last; first++, i++)
 					_allocator.construct(&_buffer[offset + i], *first);
@@ -192,7 +194,6 @@ namespace ft {
 				_size--;
 				return ( &_buffer[offset] ); // je renvoie la nouvelle valeur
 			}
-
 
 			// index: 0|1|2|3|4|5|6|7|8|9
 			// value: 1|2|3|4|5|6|7|8|9|10
@@ -296,13 +297,12 @@ namespace ft {
 			/* 5 - modifiers */
 			void		push_back(const T& x)
 			{
-				pointer iter2;
 				if ( _capacity > 0 && _size >= _capacity )
 				{
 					pointer tmp = _allocator.allocate( _capacity * 2 );
 
 					pointer iter = begin(); // check si pas problème lié decalage
-					iter2 = tmp.begin();
+					pointer iter2 = tmp;
 					while( iter != end() )
 					{
 						_allocator.construct(iter2, *iter);
@@ -310,7 +310,7 @@ namespace ft {
 						iter++;
 						iter2++;
 					}
-					_allocator.deallocate(_buffer);
+					_allocator.deallocate(_buffer, _capacity);
 					_buffer = tmp;
 					_capacity *= 2;
 				}
@@ -319,7 +319,7 @@ namespace ft {
 					_capacity++;
 					_buffer = _allocator.allocate( _capacity );
 				}
-				_allocator.construct(iter2, x);
+				_allocator.construct(&_buffer[_size], x);
 				_size++;
 			}
 

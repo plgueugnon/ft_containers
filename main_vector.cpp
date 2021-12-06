@@ -74,64 +74,64 @@ int main ()
 	std::cout << "Size of bar: " << int(bar.size()) << '\n';
 }
 
-// 	std::cout << "................................................................................\n";
-// 	std::cout << ".......................3 - TESTING ITERATORS....................................\n";
-// 	std::cout << "................................................................................\n";
+	std::cout << "................................................................................\n";
+	std::cout << ".......................3 - TESTING ITERATORS....................................\n";
+	std::cout << "................................................................................\n";
 
-// {
-// 	std::cout << "REAL VECTOR___________________________________\n";
-// 	std::vector<int> myvector;
-// 	for (int i = 1; i <= 5; i++) myvector.push_back(i);
+{
+	std::cout << "REAL VECTOR___________________________________\n";
+	std::vector<int> myvector;
+	for (int i = 1; i <= 5; i++) myvector.push_back(i);
 
-// 	std::cout << "myvector contains:";
-// 	for (std::vector<int>::iterator it = myvector.begin() ; it != myvector.end(); ++it)
-// 		std::cout << ' ' << *it;
-// 	std::cout << '\n';
-// }
+	std::cout << "myvector contains:";
+	for (std::vector<int>::iterator it = myvector.begin() ; it != myvector.end(); ++it)
+		std::cout << ' ' << *it;
+	std::cout << '\n';
+}
 
-// {
-// 	std::cout << "MY VECTOR_____________________________________\n";
-// 	ft::vector<int> myvector;
-// 	for (int i = 1; i <= 5; i++) myvector.push_back(i);
+{
+	std::cout << "MY VECTOR_____________________________________\n";
+	ft::vector<int> myvector;
+	for (int i = 1; i <= 5; i++) myvector.push_back(i);
 
-// 	std::cout << "myvector contains:";
-// 	for (ft::vector<int>::iterator it = myvector.begin() ; it != myvector.end(); ++it)
-// 		std::cout << ' ' << *it;
-// 	std::cout << '\n';
-// }
+	std::cout << "myvector contains:";
+	for (ft::vector<int>::iterator it = myvector.begin() ; it != myvector.end(); ++it)
+		std::cout << ' ' << *it;
+	std::cout << '\n';
+}
 
 
-// {
-// 	std::cout << "REAL VECTOR___________________________________\n";
-// 	std::vector<int> myrevector(5);  // 5 default-constructed ints
+{
+	std::cout << "REAL VECTOR___________________________________\n";
+	std::vector<int> myrevector(5);  // 5 default-constructed ints
 
-// 	int i = 0;
+	int i = 0;
 
-// 	std::vector<int>::reverse_iterator rit = myrevector.rbegin();
-// 	for (; rit != myrevector.rend(); ++rit)
-// 		*rit = ++i;
+	std::vector<int>::reverse_iterator rit = myrevector.rbegin();
+	for (; rit != myrevector.rend(); ++rit)
+		*rit = ++i;
 
-// 	std::cout << "myrevector contains:";
-// 	for (std::vector<int>::iterator it = myrevector.begin(); it != myrevector.end(); ++it)
-// 		std::cout << ' ' << *it;
-// 	std::cout << '\n';
-// }
+	std::cout << "myrevector contains:";
+	for (std::vector<int>::iterator it = myrevector.begin(); it != myrevector.end(); ++it)
+		std::cout << ' ' << *it;
+	std::cout << '\n';
+}
 
-// {
-// 	std::cout << "MY VECTOR_____________________________________\n";
-// 	ft::vector<int> myrevector(5);  // 5 default-constructed ints
+{
+	std::cout << "MY VECTOR_____________________________________\n";
+	ft::vector<int> myrevector(5);  // 5 default-constructed ints
 
-// 	int i = 0;
+	int i = 0;
 
-// 	ft::vector<int>::reverse_iterator rit = myrevector.rbegin();
-// 	for (; rit!= myrevector.rend(); ++rit)
-// 		*rit = ++i;
+	ft::vector<int>::reverse_iterator rit = myrevector.rbegin();
+	for (; rit!= myrevector.rend(); ++rit)
+		*rit = ++i;
 
-// 	std::cout << "myrevector contains:";
-// 	for (ft::vector<int>::iterator it = myrevector.begin(); it != myrevector.end(); ++it)
-// 		std::cout << ' ' << *it;
-// 	std::cout << '\n';
-// }
+	std::cout << "myrevector contains:";
+	for (ft::vector<int>::iterator it = myrevector.begin(); it != myrevector.end(); ++it)
+		std::cout << ' ' << *it;
+	std::cout << '\n';
+}
 
 // 	std::cout << "................................................................................\n";
 // 	std::cout << ".......................4 - TESTING SIZE & CAPACITY..............................\n";
