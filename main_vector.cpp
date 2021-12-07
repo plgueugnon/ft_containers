@@ -5,6 +5,33 @@
 #include <vector>
 #include "ft_utils.hpp"
 
+	template <typename T>
+	void	printSize(std::vector<T> const &vct)
+	{
+		std::cout << "size: " << vct.size() << std::endl;
+		std::cout << "max_size: " << vct.max_size() << std::endl;
+
+		typename std::vector<T>::const_iterator it = vct.begin();
+		typename std::vector<T>::const_iterator ite = vct.end();
+		std::cout << std::endl << "Content is:" << std::endl;
+		for (; it != ite; ++it)
+			std::cout << "- " << *it << std::endl;
+	}
+
+	template <typename T>
+	void	printSize(ft::vector<T> const &vct)
+	{
+		std::cout << "size: " << vct.size() << std::endl;
+		std::cout << "max_size: " << vct.max_size() << std::endl;
+
+		typename ft::vector<T>::const_iterator it = vct.begin();
+		typename ft::vector<T>::const_iterator ite = vct.end();
+		std::cout << std::endl << "Content is:" << std::endl;
+		for (; it != ite; ++it)
+			std::cout << "- " << *it << std::endl;
+	}
+
+
 int main ()
 {
 
@@ -874,22 +901,9 @@ int main ()
 	std::cout << "......................A - COPY CONSTRUCTOR......................................\n";
 	std::cout << "................................................................................\n";
 
-
-
 {
 	std::cout << "REAL VECTOR___________________________________\n";
-	template <typename T>
-	void	printSize(std::vector<T> &vct)
-	{
-		std::cout << "size: " << vct.size() << std::endl;
-		std::cout << "max_size: " << vct.max_size() << std::endl;
 
-		typename std::vector<T>::const_iterator it = vct.begin();
-		typename std::vector<T>::const_iterator ite = vct.end();
-		std::cout << std::endl << "Content is:" << std::endl;
-		for (; it != ite; ++it)
-			std::cout << "- " << *it << std::endl;
-	}
 
 	std::vector<int> vct(5);
 	std::vector<int>::iterator it = vct.begin(), ite = vct.end();
@@ -926,18 +940,6 @@ int main ()
 
 {
 	std::cout << "MY VECTOR_____________________________________\n";
-	template <typename T>
-	void	printSize(ft::vector<T> &vct)
-	{
-		std::cout << "size: " << vct.size() << std::endl;
-		std::cout << "max_size: " << vct.max_size() << std::endl;
-
-		typename ft::vector<T>::const_iterator it = vct.begin();
-		typename ft::vector<T>::const_iterator ite = vct.end();
-		std::cout << std::endl << "Content is:" << std::endl;
-		for (; it != ite; ++it)
-			std::cout << "- " << *it << std::endl;
-	}
 
 	ft::vector<int> vct(5);
 	ft::vector<int>::iterator it = vct.begin(), ite = vct.end();
@@ -971,6 +973,39 @@ int main ()
 	printSize(vct_range);
 	printSize(vct_copy);
 }
+
+	std::cout << "................................................................................\n";
+	std::cout << "......................B - ERASE......................................\n";
+	std::cout << "................................................................................\n";
+
+{
+		TESTED_NAMESPACE::vector<TESTED_TYPE> vct(10);
+
+	for (unsigned long int i = 0; i < vct.size(); ++i)
+		vct[i] = std::string((vct.size() - i), i + 65);
+	printSize(vct);
+
+	checkErase(vct, vct.erase(vct.begin() + 2));
+
+	checkErase(vct, vct.erase(vct.begin()));
+	checkErase(vct, vct.erase(vct.end() - 1));
+
+	checkErase(vct, vct.erase(vct.begin(), vct.begin() + 3));
+	checkErase(vct, vct.erase(vct.end() - 3, vct.end() - 1));
+
+	vct.push_back("Hello");
+	vct.push_back("Hi there");
+	printSize(vct);
+	checkErase(vct, vct.erase(vct.end() - 3, vct.end()));
+
+	vct.push_back("ONE");
+	vct.push_back("TWO");
+	vct.push_back("THREE");
+	vct.push_back("FOUR");
+	printSize(vct);
+	checkErase(vct, vct.erase(vct.begin(), vct.end()));
+}
+
 
 	return 0;
 }

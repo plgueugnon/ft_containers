@@ -137,7 +137,7 @@ namespace ft
 	template<typename T>
 	ft::random_access_iterator<T>	operator+( size_t n, ft::random_access_iterator<T> const &rhs ) // cas n + a
 	{
-		return ( n + rhs._ptr );
+		return ( n + rhs.base() );
 	}
 
 	/*
@@ -149,31 +149,31 @@ namespace ft
 	template<typename T>
 	typename ft::random_access_iterator<T>::difference_type	operator-( ft::random_access_iterator<T> const &lhs, ft::random_access_iterator<T> const &rhs )
 	{
-		return ( lhs._ptr - rhs._ptr );
+		return ( lhs.base() - rhs.base() );
 	}
 
 	template<typename T>
 	bool	operator<( ft::random_access_iterator<T> const &lhs, ft::random_access_iterator<T> const &rhs )
 	{
-		return ( lhs._ptr < rhs._ptr );
+		return ( lhs.base() < rhs.base() );
 	}
 
 	template<typename T>
 	bool	operator>( ft::random_access_iterator<T> const &lhs, ft::random_access_iterator<T> const &rhs )
 	{
-		return ( lhs._ptr > rhs._ptr );
+		return ( lhs.base() > rhs.base() );
 	}
 
 	template<typename T>
 	bool	operator<=( ft::random_access_iterator<T> const &lhs, ft::random_access_iterator<T> const &rhs )
 	{
-		return ( lhs._ptr <= rhs._ptr );
+		return ( lhs.base() <= rhs.base() );
 	}
 
 	template<typename T>
 	bool	operator>=( ft::random_access_iterator<T> const &lhs, ft::random_access_iterator<T> const &rhs )
 	{
-		return ( lhs._ptr >= rhs._ptr );
+		return ( lhs.base() >= rhs.base() );
 	}
 
 }
