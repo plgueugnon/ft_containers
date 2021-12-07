@@ -119,15 +119,15 @@ namespace ft
 		{
 			return ( _ptr < rhs._ptr );
 		}
-		bool	operator>( const random_access_iterator &rhs ) const
-		{
-			return ( _ptr > rhs._ptr );
-		}
 		bool	operator<=( const random_access_iterator &rhs ) const
 		{
 			return ( _ptr <= rhs._ptr );
 		}
-		bool	operator>=( const random_access_iterator  &rhs ) const
+		bool	operator>( const random_access_iterator &rhs ) const
+		{
+			return ( _ptr > rhs._ptr );
+		}
+		bool	operator>=( const random_access_iterator &rhs ) const
 		{
 			return ( _ptr >= rhs._ptr );
 		}
@@ -143,26 +143,47 @@ namespace ft
 	};
 
 	template<typename T>
-	ft::random_access_iterator<T>	operator+( size_t n, const ft::random_access_iterator<T> &rhs ) // cas n + a
+	bool	operator<( const ft::random_access_iterator<T> &lhs, const ft::random_access_iterator<T> &rhs )
 	{
-		return ( n + rhs.base() );
-	}
-
-	/*
-	specific case of the STL which state that a subtraction between two iterators should be possible
-	the return value is difference type = a - b
-	https://www.cplusplus.com/reference/iterator/RandomAccessIterator/
-	https://en.cppreference.com/w/cpp/named_req/RandomAccessIterator 
-	*/
-	template<typename T>
-	typename ft::random_access_iterator<T>::difference_type	operator-( const ft::random_access_iterator<T> &lhs, const ft::random_access_iterator<T> &rhs )
-	{
-		return ( lhs.base() - rhs.base() );
+		return ( lhs.base() < rhs.base() );
 	}
 	template<typename T1, typename T2>
-	typename ft::random_access_iterator<T1>::difference_type	operator-( const ft::random_access_iterator<T1> &lhs, const ft::random_access_iterator<T2> &rhs )
+	bool	operator<( const ft::random_access_iterator<T1> &lhs, const ft::random_access_iterator<T2> &rhs )
 	{
-		return ( lhs.base() - rhs.base() );
+		return ( lhs.base() < rhs.base() );
+	}
+
+	template<typename T>
+	bool	operator>( const ft::random_access_iterator<T> &lhs, const ft::random_access_iterator<T> &rhs )
+	{
+		return ( lhs.base() > rhs.base() );
+	}
+	template<typename T1, typename T2>
+	bool	operator>( const ft::random_access_iterator<T1> &lhs, const ft::random_access_iterator<T2> &rhs )
+	{
+		return ( lhs.base() > rhs.base() );
+	}
+
+	template<typename T>
+	bool	operator>=( const ft::random_access_iterator<T> &lhs, const ft::random_access_iterator<T> &rhs )
+	{
+		return ( lhs.base() >= rhs.base() );
+	}
+	template<typename T1, typename T2>
+	bool	operator>=( const ft::random_access_iterator<T1> &lhs, const ft::random_access_iterator<T2> &rhs )
+	{
+		return ( lhs.base() >= rhs.base() );
+	}
+
+	template<typename T>
+	bool	operator<=( const ft::random_access_iterator<T> &lhs, const ft::random_access_iterator<T> &rhs )
+	{
+		return ( lhs <= rhs );
+	}
+	template<typename T1, typename T2>
+	bool	operator<=( const ft::random_access_iterator<T1> lhs, const ft::random_access_iterator<T1> rhs )
+	{
+		return ( lhs.base() <= rhs.base() );
 	}
 
 	template<typename T>
@@ -188,47 +209,26 @@ namespace ft
 	}
 
 	template<typename T>
-	bool	operator<( const ft::random_access_iterator<T> &lhs, const ft::random_access_iterator<T> &rhs )
+	ft::random_access_iterator<T>	operator+( size_t n, const ft::random_access_iterator<T> &rhs ) // cas n + a
 	{
-		return ( lhs.base() < rhs.base() );
-	}
-	template<typename T1, typename T2>
-	bool	operator<( const ft::random_access_iterator<T1> &lhs, const ft::random_access_iterator<T2> &rhs )
-	{
-		return ( lhs.base() < rhs.base() );
+		return ( n + rhs.base() );
 	}
 
+	/*
+	specific case of the STL which state that a subtraction between two iterators should be possible
+	the return value is difference type = a - b
+	https://www.cplusplus.com/reference/iterator/RandomAccessIterator/
+	https://en.cppreference.com/w/cpp/named_req/RandomAccessIterator 
+	*/
 	template<typename T>
-	bool	operator>( const ft::random_access_iterator<T> &lhs, const ft::random_access_iterator<T> &rhs )
+	typename ft::random_access_iterator<T>::difference_type	operator-( const ft::random_access_iterator<T> &lhs, const ft::random_access_iterator<T> &rhs )
 	{
-		return ( lhs.base() > rhs.base() );
+		return ( lhs.base() - rhs.base() );
 	}
 	template<typename T1, typename T2>
-	bool	operator>( const ft::random_access_iterator<T1> &lhs, const ft::random_access_iterator<T2> &rhs )
+	typename ft::random_access_iterator<T1>::difference_type	operator-( const ft::random_access_iterator<T1> &lhs, const ft::random_access_iterator<T2> &rhs )
 	{
-		return ( lhs.base() > rhs.base() );
-	}
-
-	template<typename T>
-	bool	operator<=( const ft::random_access_iterator<T> &lhs, const ft::random_access_iterator<T> &rhs )
-	{
-		return ( lhs.base() <= rhs.base() );
-	}
-	template<typename T1, typename T2>
-	bool	operator<=( const ft::random_access_iterator<T1> &lhs, const ft::random_access_iterator<T1> &rhs )
-	{
-		return ( lhs.base() <= rhs.base() );
-	}
-
-	template<typename T>
-	bool	operator>=( const ft::random_access_iterator<T> &lhs, const ft::random_access_iterator<T> &rhs )
-	{
-		return ( lhs.base() >= rhs.base() );
-	}
-	template<typename T1, typename T2>
-	bool	operator>=( const ft::random_access_iterator<T1> &lhs, const ft::random_access_iterator<T2> &rhs )
-	{
-		return ( lhs.base() >= rhs.base() );
+		return ( lhs.base() - rhs.base() );
 	}
 }
 
