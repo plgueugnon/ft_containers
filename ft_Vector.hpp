@@ -4,6 +4,8 @@
 #include <iostream> // a suppr
 
 #include <memory>
+// #include "ft_iterator.hpp"
+// #include "../compare_containers/containers/iterator.hpp"
 #include "ft_random_access_iterator.hpp"
 #include "ft_reverse_iterator.hpp"
 #include "ft_type_resolution.hpp"
@@ -17,15 +19,18 @@ namespace ft {
 		public:
 			typedef T																value_type;
 			typedef Allocator														allocator_type;
-			typedef typename Allocator::reference									reference;
-			typedef typename Allocator::const_reference								const_reference;
-			typedef typename Allocator::pointer										pointer;
-			typedef typename Allocator::const_pointer								const_pointer;
-			typedef typename ft::random_access_iterator<value_type>::pointer		iterator; // je defini ce qu'est un iterator pour allocator
-			typedef typename ft::random_access_iterator<const value_type>::pointer	const_iterator;
-			typedef typename ft::reverse_iterator<iterator>::pointer				reverse_iterator;
-			typedef typename ft::reverse_iterator<const_iterator>::pointer			const_reverse_iterator;
-			typedef	typename allocator_type::size_type								size_type; // a check si ces deux alias suffisent pour simplifier les valeurs de retours
+
+			typedef typename allocator_type::reference								reference;
+			typedef typename allocator_type::const_reference						const_reference;
+			typedef typename allocator_type::pointer								pointer;
+			typedef typename allocator_type::const_pointer							const_pointer;
+
+			typedef  ft::random_access_iterator<value_type>							iterator; // je defini ce qu'est un iterator pour allocator
+			typedef  ft::random_access_iterator<const value_type>					const_iterator;
+			typedef  ft::reverse_iterator<iterator>									reverse_iterator;
+			typedef  ft::reverse_iterator<const_iterator>							const_reverse_iterator;
+
+			typedef	std::size_t								size_type; // a check si ces deux alias suffisent pour simplifier les valeurs de retours
 			typedef	std::ptrdiff_t	difference_type;
 
 
@@ -81,7 +86,7 @@ namespace ft {
 				if (_capacity)
 					_buffer = _allocator.allocate(_capacity);
 				for(size_type i = 0; i < _size; i++)
-					_allocator.construct(&_buffer[i], x._buffer[i]);
+					_allocator.construct(&_buffer[i], x[i]);
 			}
 
 			/* default destructor */
@@ -129,10 +134,12 @@ namespace ft {
 
 			iterator	insert(iterator position, const T& x)
 			{
+				// std::cout << "\ncheck1\n";
 				difference_type offset = ft::distance(begin(), position);
 				reserve( _size + 1 );
-				pointer last = end(); // check si pas problème lié decalage
-				while ( last != begin() + offset )
+				pointer last = _buffer + _size; // check si pas problème lié decalage
+				pointer first = _buffer;
+				while ( last != first + offset )
 				{
 					_allocator.construct(last, *(last - 1));
 					_allocator.destroy(last);
@@ -149,13 +156,15 @@ namespace ft {
 			*/
 			void	insert(iterator position, size_type n, const T& x)
 			{
+				// std::cout << "\ncheck2\n";
 				difference_type offset = ft::distance(begin(), position);
 				reserve( _size + n );
-				pointer last = end(); // check si pas problème lié decalage
-				while ( last != begin() + offset )
+				pointer last = _buffer + _size;
+				pointer first = _buffer; // check si pas problème lié decalage
+				while ( last != first + offset )
 				{
-					_allocator.construct(last, *(last - 1));
-					_allocator.destroy(last);
+					_allocator.construct(last + n - 1, *(last - 1));
+					_allocator.destroy(last - 1);
 					--last;
 				}
 				for (size_type i = 0; i < n; i++)
@@ -167,14 +176,17 @@ namespace ft {
 			void	insert(iterator position, InputIterator first, InputIterator last,
 					typename ft::enable_if<!ft::is_integral<InputIterator>::value, void **>::type = nullptr)
 			{
+				// std::cout << "\ncheck3\n";
 				difference_type offset = ft::distance(begin(), position);
 				size_type n = ft::distance(first, last);
 				reserve( _size + n );
-				pointer last_object = end(); // check si pas problème lié decalage
-				while ( last_object != begin() + offset )
+				pointer last_object = _buffer + _size; // check si pas problème lié decalage
+				pointer first_object = _buffer;
+
+				while ( last_object != first_object + offset )
 				{
-					_allocator.construct(last_object, *(last_object - 1));
-					_allocator.destroy(last_object);
+					_allocator.construct(last_object + n - 1, *(last_object - 1));
+					_allocator.destroy(last_object - 1);
 					--last_object;
 				}
 				for (size_type i = 0; first != last; first++, i++)
@@ -211,7 +223,6 @@ namespace ft {
 					_allocator.destroy(&_buffer[i]);
 				_size -= deleted; // j'actualise size
 				return ( &_buffer[offset] );
-
 			}
 
 			void		clear()
@@ -301,9 +312,10 @@ namespace ft {
 				{
 					pointer tmp = _allocator.allocate( _capacity * 2 );
 
-					pointer iter = begin(); // check si pas problème lié decalage
+					pointer iter = _buffer; // check si pas problème lié decalage
+					pointer end = _buffer + _size;
 					pointer iter2 = tmp;
-					while( iter != end() )
+					while( iter != end )
 					{
 						_allocator.construct(iter2, *iter);
 						_allocator.destroy(iter); // a check si probleme
@@ -335,7 +347,7 @@ namespace ft {
 			void	swap(vector& x)
 			{
 				ft::swap( _buffer, x._buffer );
-				ft::swap( _size, x._buffer );
+				ft::swap( _size, x._size );
 				ft::swap( _capacity, x._capacity );
 			}
 

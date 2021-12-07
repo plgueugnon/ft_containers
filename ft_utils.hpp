@@ -1,9 +1,9 @@
 #ifndef __FT_UTILS_H__
 #define __FT_UTILS_H__
 
-#include "ft_iterator.hpp"
-#include "ft_random_access_iterator.hpp"
-#include "ft_type_resolution.hpp"
+// #include "ft_iterator.hpp"
+// #include "ft_random_access_iterator.hpp"
+// #include "ft_type_resolution.hpp"
 
 namespace ft
 {
@@ -23,7 +23,7 @@ namespace ft
 	}
 
 	// pas demandé
-	template <class T>
+	template <typename T>
 	void swap ( T& a, T& b )
 	{
 		T c(a);

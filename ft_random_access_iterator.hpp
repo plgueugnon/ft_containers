@@ -1,30 +1,33 @@
 #ifndef __FT_RANDOM_ACCESS_ITERATOR_H__
 #define __FT_RANDOM_ACCESS_ITERATOR_H__
 
+#include <iostream> // A SUPRR
+
 #include "ft_iterator.hpp"
-#include "ft_reverse_iterator.hpp"
-#include "ft_type_resolution.hpp"
 
 namespace ft
 {
-	template<typename T>
+	template<class T>
 	class random_access_iterator : public ft::iterator<ft::random_access_iterator_tag, T>
 	{
 			// alias typedef
 	public:
 
-		typedef typename ft::iterator<ft::random_access_iterator_tag, T>::value_type value_type;
-		typedef typename ft::iterator<ft::random_access_iterator_tag, T>::difference_type difference_type;
-		typedef typename ft::iterator<ft::random_access_iterator_tag, T>::pointer pointer;
-		typedef typename ft::iterator<ft::random_access_iterator_tag, T>::reference reference;
-		typedef typename ft::iterator<ft::random_access_iterator_tag, T>::iterator_category iterator_category;
+		typedef T																			iterator_type;
+		typedef typename ft::iterator<ft::random_access_iterator_tag, T>::iterator_category	iterator_category;
+		typedef typename ft::iterator<ft::random_access_iterator_tag, T>::value_type		value_type;
+		typedef typename ft::iterator<ft::random_access_iterator_tag, T>::difference_type	difference_type;
+		typedef typename ft::iterator<ft::random_access_iterator_tag, T>::pointer			pointer;
+		typedef typename ft::iterator<ft::random_access_iterator_tag, T>::reference			reference;
 
-	protected:
+	private:
 		pointer _ptr;
 
 	public:
 		/* canonical form */
 		random_access_iterator( void ) : _ptr(NULL) { return ; }
+
+		random_access_iterator( pointer src ) : _ptr(src) {} // ajout cas ptr en arg
 		random_access_iterator( const random_access_iterator &src ) : _ptr(src._ptr) { return ; }
 		~random_access_iterator( void ) { return ; }
 		random_access_iterator	&operator=( const random_access_iterator &src )
@@ -35,11 +38,51 @@ namespace ft
 			}
 			return ( *this );
 		}
+		pointer base() const { return ( _ptr ); } // ajout
 
 		/* 
 		implementation https://en.cppreference.com/w/cpp/named_req/RandomAccessIterator 
 		https://en.cppreference.com/w/cpp/language/operators
 		*/
+
+		bool	operator!=( random_access_iterator const &rhs ) const
+		{
+			return ( _ptr != rhs._ptr ); // return true or false selon si != ou non
+		}
+		reference	operator*( void ) const // ajout const
+		{
+			return ( *_ptr );
+		}
+		pointer	operator->( void ) const // ajout const
+		{
+			return ( &( operator*() ) );
+		}
+		bool	operator==( random_access_iterator const &rhs ) const
+		{
+			return ( _ptr == rhs._ptr ); // return true or false selon si == ou non
+		}
+
+		random_access_iterator	&operator+=( const difference_type n )
+		{
+			_ptr += n;
+			return ( *this );
+		}
+
+		random_access_iterator	operator+( const difference_type n ) const // a + n
+		{
+			return ( _ptr + n );
+		}
+
+		random_access_iterator	&operator-=( const difference_type n )
+		{
+			_ptr -= n;
+			return ( *this );
+		}
+
+		random_access_iterator	operator-( const difference_type n ) const // a - n
+		{
+			return ( _ptr - n );
+		}
 
 //prefix increment
 		random_access_iterator	&operator++( void )
@@ -54,23 +97,6 @@ namespace ft
 			_ptr++;
 			return ( tmp );
 		}
-		bool	operator==( random_access_iterator const &rhs ) const
-		{
-			return ( _ptr == rhs._ptr ); // return true or false selon si == ou non
-		}
-
-		bool	operator!=( random_access_iterator const &rhs ) const
-		{
-			return ( _ptr != rhs._ptr ); // return true or false selon si != ou non
-		}
-		reference	operator*( void )
-		{
-			return ( *_ptr );
-		}
-		pointer	operator->( void )
-		{
-			return ( _ptr );
-		}
 // prefix decrement
 		random_access_iterator	&operator--( void )
 		{
@@ -84,6 +110,7 @@ namespace ft
 			_ptr--;
 			return ( tmp );
 		}
+
 		bool	operator<( random_access_iterator const &rhs ) const
 		{
 			return ( _ptr < rhs._ptr );
@@ -101,24 +128,6 @@ namespace ft
 			return ( _ptr >= rhs._ptr );
 		}
 
-		random_access_iterator	operator+( const difference_type n ) const // a + n
-		{
-			return ( _ptr + n );
-		}
-		random_access_iterator	operator-( const difference_type n ) const // a - n
-		{
-			return ( _ptr - n );
-		}
-		random_access_iterator	&operator+=( const difference_type n )
-		{
-			_ptr += n;
-			return ( *this );
-		}
-		random_access_iterator	&operator-=( const difference_type n )
-		{
-			_ptr -= n;
-			return ( *this );
-		}
 		reference	operator[]( const difference_type n )
 		{
 			return ( *(_ptr + n) );
@@ -166,10 +175,6 @@ namespace ft
 	{
 		return ( lhs._ptr >= rhs._ptr );
 	}
-
-	// a voir si preferable de les rajouter
-		// bool	operator==( random_access_iterator const &rhs ) const;
-		// bool	operator!=( random_access_iterator const &rhs ) const;
 
 }
 
