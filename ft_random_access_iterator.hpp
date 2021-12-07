@@ -25,10 +25,12 @@ namespace ft
 
 	public:
 		/* canonical form */
+		/* default constructor */
 		random_access_iterator( void ) : _ptr(NULL) { return ; }
-
-		random_access_iterator( pointer src ) : _ptr(src) {} // ajout cas ptr en arg
+		/* basic constructor */
+		
 		random_access_iterator( const random_access_iterator &src ) : _ptr(src._ptr) { return ; }
+		random_access_iterator( pointer src ) : _ptr(src) {} // ajout cas ptr en arg
 		~random_access_iterator( void ) { return ; }
 		random_access_iterator	&operator=( const random_access_iterator &src )
 		{
@@ -45,10 +47,7 @@ namespace ft
 		https://en.cppreference.com/w/cpp/language/operators
 		*/
 
-		bool	operator!=( random_access_iterator const &rhs ) const
-		{
-			return ( _ptr != rhs._ptr ); // return true or false selon si != ou non
-		}
+
 		reference	operator*( void ) const // ajout const
 		{
 			return ( *_ptr );
@@ -57,10 +56,7 @@ namespace ft
 		{
 			return ( &( operator*() ) );
 		}
-		bool	operator==( random_access_iterator const &rhs ) const
-		{
-			return ( _ptr == rhs._ptr ); // return true or false selon si == ou non
-		}
+
 
 		random_access_iterator	&operator+=( const difference_type n )
 		{
@@ -111,19 +107,27 @@ namespace ft
 			return ( tmp );
 		}
 
-		bool	operator<( random_access_iterator const &rhs ) const
+		bool	operator==( const random_access_iterator &rhs ) const
+		{
+			return ( _ptr == rhs._ptr ); // return true or false selon si == ou non
+		}
+		bool	operator!=( const random_access_iterator &rhs ) const
+		{
+			return ( _ptr != rhs._ptr ); // return true or false selon si != ou non
+		}
+		bool	operator<( const random_access_iterator  &rhs ) const
 		{
 			return ( _ptr < rhs._ptr );
 		}
-		bool	operator>( random_access_iterator const &rhs ) const
+		bool	operator>( const random_access_iterator &rhs ) const
 		{
 			return ( _ptr > rhs._ptr );
 		}
-		bool	operator<=( random_access_iterator const &rhs ) const
+		bool	operator<=( const random_access_iterator &rhs ) const
 		{
 			return ( _ptr <= rhs._ptr );
 		}
-		bool	operator>=( random_access_iterator const &rhs ) const
+		bool	operator>=( const random_access_iterator  &rhs ) const
 		{
 			return ( _ptr >= rhs._ptr );
 		}
@@ -132,10 +136,14 @@ namespace ft
 		{
 			return ( *(_ptr + n) );
 		}
+
+		// A commenter => operateur de conversion en const
+		operator	random_access_iterator<const value_type>() const { return ( random_access_iterator<const value_type>(_ptr) ); }
+
 	};
 
 	template<typename T>
-	ft::random_access_iterator<T>	operator+( size_t n, ft::random_access_iterator<T> const &rhs ) // cas n + a
+	ft::random_access_iterator<T>	operator+( size_t n, const ft::random_access_iterator<T> &rhs ) // cas n + a
 	{
 		return ( n + rhs.base() );
 	}
@@ -147,35 +155,81 @@ namespace ft
 	https://en.cppreference.com/w/cpp/named_req/RandomAccessIterator 
 	*/
 	template<typename T>
-	typename ft::random_access_iterator<T>::difference_type	operator-( ft::random_access_iterator<T> const &lhs, ft::random_access_iterator<T> const &rhs )
+	typename ft::random_access_iterator<T>::difference_type	operator-( const ft::random_access_iterator<T> &lhs, const ft::random_access_iterator<T> &rhs )
+	{
+		return ( lhs.base() - rhs.base() );
+	}
+	template<typename T1, typename T2>
+	typename ft::random_access_iterator<T1>::difference_type	operator-( const ft::random_access_iterator<T1> &lhs, const ft::random_access_iterator<T2> &rhs )
 	{
 		return ( lhs.base() - rhs.base() );
 	}
 
 	template<typename T>
-	bool	operator<( ft::random_access_iterator<T> const &lhs, ft::random_access_iterator<T> const &rhs )
+	bool	operator==( const ft::random_access_iterator<T> &lhs, const ft::random_access_iterator<T> &rhs )
+	{
+		return ( lhs.base() == rhs.base() );
+	}
+	template<typename T1, typename T2>
+	bool	operator==( const ft::random_access_iterator<T1> &lhs, const ft::random_access_iterator<T2> &rhs )
+	{
+		return ( lhs.base() == rhs.base() );
+	}
+
+	template<typename T>
+	bool	operator!=( const ft::random_access_iterator<T> &lhs, const ft::random_access_iterator<T> &rhs )
+	{
+		return ( lhs.base() != rhs.base() );
+	}
+	template<typename T1, typename T2>
+	bool	operator!=( const ft::random_access_iterator<T1> &lhs, const ft::random_access_iterator<T2> &rhs )
+	{
+		return ( lhs.base() != rhs.base() );
+	}
+
+	template<typename T>
+	bool	operator<( const ft::random_access_iterator<T> &lhs, const ft::random_access_iterator<T> &rhs )
+	{
+		return ( lhs.base() < rhs.base() );
+	}
+	template<typename T1, typename T2>
+	bool	operator<( const ft::random_access_iterator<T1> &lhs, const ft::random_access_iterator<T2> &rhs )
 	{
 		return ( lhs.base() < rhs.base() );
 	}
 
 	template<typename T>
-	bool	operator>( ft::random_access_iterator<T> const &lhs, ft::random_access_iterator<T> const &rhs )
+	bool	operator>( const ft::random_access_iterator<T> &lhs, const ft::random_access_iterator<T> &rhs )
+	{
+		return ( lhs.base() > rhs.base() );
+	}
+	template<typename T1, typename T2>
+	bool	operator>( const ft::random_access_iterator<T1> &lhs, const ft::random_access_iterator<T2> &rhs )
 	{
 		return ( lhs.base() > rhs.base() );
 	}
 
 	template<typename T>
-	bool	operator<=( ft::random_access_iterator<T> const &lhs, ft::random_access_iterator<T> const &rhs )
+	bool	operator<=( const ft::random_access_iterator<T> &lhs, const ft::random_access_iterator<T> &rhs )
+	{
+		return ( lhs.base() <= rhs.base() );
+	}
+	template<typename T1, typename T2>
+	bool	operator<=( const ft::random_access_iterator<T1> &lhs, const ft::random_access_iterator<T1> &rhs )
 	{
 		return ( lhs.base() <= rhs.base() );
 	}
 
 	template<typename T>
-	bool	operator>=( ft::random_access_iterator<T> const &lhs, ft::random_access_iterator<T> const &rhs )
+	bool	operator>=( const ft::random_access_iterator<T> &lhs, const ft::random_access_iterator<T> &rhs )
 	{
 		return ( lhs.base() >= rhs.base() );
 	}
-
+	template<typename T1, typename T2>
+	bool	operator>=( const ft::random_access_iterator<T1> &lhs, const ft::random_access_iterator<T2> &rhs )
+	{
+		return ( lhs.base() >= rhs.base() );
+	}
 }
 
 #endif // __FT_RANDOM_ACCESS_ITERATOR_H__
