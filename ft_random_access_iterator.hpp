@@ -142,66 +142,36 @@ namespace ft
 
 	};
 
-	template<typename T>
-	bool	operator<( const ft::random_access_iterator<T> &lhs, const ft::random_access_iterator<T> &rhs )
-	{
-		return ( lhs.base() < rhs.base() );
-	}
 	template<typename T1, typename T2>
 	bool	operator<( const ft::random_access_iterator<T1> &lhs, const ft::random_access_iterator<T2> &rhs )
 	{
 		return ( lhs.base() < rhs.base() );
 	}
 
-	template<typename T>
-	bool	operator>( const ft::random_access_iterator<T> &lhs, const ft::random_access_iterator<T> &rhs )
-	{
-		return ( lhs.base() > rhs.base() );
-	}
 	template<typename T1, typename T2>
 	bool	operator>( const ft::random_access_iterator<T1> &lhs, const ft::random_access_iterator<T2> &rhs )
 	{
 		return ( lhs.base() > rhs.base() );
 	}
 
-	template<typename T>
-	bool	operator>=( const ft::random_access_iterator<T> &lhs, const ft::random_access_iterator<T> &rhs )
-	{
-		return ( lhs.base() >= rhs.base() );
-	}
 	template<typename T1, typename T2>
 	bool	operator>=( const ft::random_access_iterator<T1> &lhs, const ft::random_access_iterator<T2> &rhs )
 	{
 		return ( lhs.base() >= rhs.base() );
 	}
 
-	template<typename T>
-	bool	operator<=( const ft::random_access_iterator<T> &lhs, const ft::random_access_iterator<T> &rhs )
-	{
-		return ( lhs <= rhs );
-	}
 	template<typename T1, typename T2>
-	bool	operator<=( const ft::random_access_iterator<T1> lhs, const ft::random_access_iterator<T1> rhs )
+	bool	operator<=( const ft::random_access_iterator<T1> &lhs, const ft::random_access_iterator<T2> &rhs )
 	{
 		return ( lhs.base() <= rhs.base() );
 	}
 
-	template<typename T>
-	bool	operator==( const ft::random_access_iterator<T> &lhs, const ft::random_access_iterator<T> &rhs )
-	{
-		return ( lhs.base() == rhs.base() );
-	}
 	template<typename T1, typename T2>
 	bool	operator==( const ft::random_access_iterator<T1> &lhs, const ft::random_access_iterator<T2> &rhs )
 	{
 		return ( lhs.base() == rhs.base() );
 	}
 
-	template<typename T>
-	bool	operator!=( const ft::random_access_iterator<T> &lhs, const ft::random_access_iterator<T> &rhs )
-	{
-		return ( lhs.base() != rhs.base() );
-	}
 	template<typename T1, typename T2>
 	bool	operator!=( const ft::random_access_iterator<T1> &lhs, const ft::random_access_iterator<T2> &rhs )
 	{

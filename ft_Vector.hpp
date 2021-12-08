@@ -377,13 +377,13 @@ namespace ft {
 	bool	operator!=(const vector<T, Allocator>& x, const vector<T, Allocator>& y) { return !( x == y ); }
 
 	template<class T, class Allocator>
+	bool	operator<=(const vector<T, Allocator>& x, const vector<T, Allocator>& y) { return !( y < x ); }
+
+	template<class T, class Allocator>
 	bool	operator>(const vector<T, Allocator>& x, const vector<T, Allocator>& y) { return ( y < x ); }
 
 	template<class T, class Allocator>
 	bool	operator>=(const vector<T, Allocator>& x, const vector<T, Allocator>& y) { return !( x < y ); }
-
-	template<class T, class Allocator>
-	bool	operator<=(const vector<T, Allocator>& x, const vector<T, Allocator>& y) { return !( y < x ); }
 
 	template<class T, class Allocator>
 	void	swap(vector<T, Allocator>& x, vector<T, Allocator>& y) { x.swap(y); }

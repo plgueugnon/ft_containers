@@ -120,65 +120,40 @@ namespace ft
 
 	};
 
-	template<class Iterator>
-	bool operator==( const ft::reverse_iterator<Iterator>& x, const ft::reverse_iterator<Iterator>& y)
-	{
-		return ( x.base() == y.base() );
-	}
 	template<class Iterator1, class Iterator2>
 	bool operator==( const ft::reverse_iterator<Iterator1>& x, const ft::reverse_iterator<Iterator2>& y)
 	{
 		return ( x.base() == y.base() );
 	}
-	template<class Iterator>
-	bool operator!=( const ft::reverse_iterator<Iterator>& x, const ft::reverse_iterator<Iterator>& y)
-	{
-		return ( x.base() != y.base() );
-	}
+
 	template<class Iterator1, class Iterator2>
 	bool operator!=( const ft::reverse_iterator<Iterator1>& x, const ft::reverse_iterator<Iterator2>& y)
 	{
 		return ( x.base() != y.base() );
 	}
-	template<class Iterator>
-	bool operator<( const ft::reverse_iterator<Iterator>& x, const ft::reverse_iterator<Iterator>& y)
-	{
-		return ( x.base() > y.base() );
-	}
+
 	template<class Iterator1, class Iterator2>
 	bool operator<( const ft::reverse_iterator<Iterator1>& x, const ft::reverse_iterator<Iterator2>& y)
 	{
 		return ( x.base() > y.base() );
 	}
-	template<class Iterator>
-	bool operator<=( const ft::reverse_iterator<Iterator>& x, const ft::reverse_iterator<Iterator>& y)
-	{
-		return ( y.base() <= x.base() );
-	}
+
 	template<class Iterator1, class Iterator2>
 	bool operator<=( const ft::reverse_iterator<Iterator1>& x, const ft::reverse_iterator<Iterator2>& y)
 	{
 		return ( y.base() <= x.base() );
 	}
-	template<class Iterator>
-	bool operator>( const ft::reverse_iterator<Iterator>& x, const ft::reverse_iterator<Iterator>& y)
-	{
-		return ( x.base() < y.base() );
-	}
+
 	template<class Iterator1, class Iterator2>
 	bool operator>( const ft::reverse_iterator<Iterator1>& x, const ft::reverse_iterator<Iterator2>& y)
 	{
 		return ( x.base() < y.base() );
 	}
-	template<class Iterator>
-	bool operator>=( const ft::reverse_iterator<Iterator>& x, const ft::reverse_iterator<Iterator>& y)
-	{
-		return ( x.base() <= y.base() );
-	}
+
 	template<class Iterator1, class Iterator2>
 	bool operator>=( const ft::reverse_iterator<Iterator1>& x, const ft::reverse_iterator<Iterator2>& y)
 	{
-		return ( x.base() <= y.base() );
+		return ( y.base() >= x.base() );
 	}
 
 	template<class Iterator>
