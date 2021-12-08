@@ -1,11 +1,7 @@
 #ifndef __FT_VECTOR_H__
 #define __FT_VECTOR_H__
 
-#include <iostream> // a suppr
-
 #include <memory>
-// #include "ft_iterator.hpp"
-// #include "../compare_containers/containers/iterator.hpp"
 #include "ft_random_access_iterator.hpp"
 #include "ft_reverse_iterator.hpp"
 #include "ft_type_resolution.hpp"
