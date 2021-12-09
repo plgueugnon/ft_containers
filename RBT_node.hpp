@@ -8,6 +8,7 @@ namespace ft
 	template<typename T>
 	struct RBT_node
 	{
+		/* la value reçue dans RBT_node est mapped_value */
 		T			value;
 		RBT_node	*parent;
 		RBT_node	*left;
@@ -17,7 +18,7 @@ namespace ft
 		/* default constructor */
 		RBT_node() : value(), parent(nullptr), left(nullptr), right(nullptr), color() {}
 		/* constructor by value - giving a new value and a default color */
-		RBT_node(cont T& value, e_color color = RED) : parent(nullptr), right(nullptr), left(nullptr), value(value), color(color) {}
+		RBT_node(const T& value, e_color color = RED) : parent(nullptr), right(nullptr), left(nullptr), value(value), color(color) {}
 		/* destrutor */
 		~RBT_node();
 		/* copy constructor */ // is_used ?

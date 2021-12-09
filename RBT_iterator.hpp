@@ -2,6 +2,7 @@
 #define __RBT_ITERATOR_H__
 
 #include "ft_iterator.hpp"
+#include "ft_reverse_iterator.hpp"
 #include "RBT_node.hpp"
 
 // va recevoir un pointeur sur un objet de type RBT_node

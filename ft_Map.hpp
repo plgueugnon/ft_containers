@@ -1,7 +1,7 @@
 #ifndef __FT_MAP_H__
 #define __FT_MAP_H__
 
-#include "ft_random_access_iterator.hpp"
+#include "Red_Black_tree.hpp"
 #include "ft_utils.hpp"
 #include "ft_type_resolution.hpp"
 #include <memory>
@@ -20,10 +20,10 @@ namespace ft
 			typedef Allocator allocator_type;
 			typedef typename Allocator::reference reference;
 			typedef typename Allocator::const_reference const_reference;
-			typedef ft::random_access_iterator<value_type> iterator; // See 23.1
-			typedef ft::random_access_iterator<value_type> const_iterator; // See 23.1
-			typedef size_t size_type; // See 23.1
-			typedef ptrdiff_t difference_type;// See 23.1
+			typedef ft::RBT<value_type> iterator; // See 23.1
+			typedef ft::RBT<value_type> const_iterator; // See 23.1
+			typedef size_t size_type;
+			typedef ptrdiff_t difference_type;
 			typedef typename Allocator::pointer pointer;
 			typedef typename Allocator::const_pointer const_pointer;
 			typedef std::reverse_iterator<iterator> reverse_iterator;
