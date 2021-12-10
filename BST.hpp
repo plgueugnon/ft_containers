@@ -43,10 +43,11 @@ namespace ft
 
 		private:
 			node_pointer		_root; // ptr sur node // sert de point depart depuis le haut de l'arbre pour chaque operation
-			node_pointer		_tree; // ptr sur node, 
+			//node_pointer		_nil; // a voir si utile
 			size_type			_size;
-			allocator_type		_alloc;
+			node_allocator		_node_alloc;
 			key_compare			_comp;
+
 
 		public:
 
@@ -54,23 +55,82 @@ namespace ft
 			/* Member type key_compare is the internal comparison object type used by the container */
 			BST(key_compare &c = key_compare())
 			{
-
+				// a voir si obligatoire de allocate un node null pour que marche
+				_root = nullptr; // init la root sur NULL car arbre vide / avec 1 seule node
+				_comp = c; // stocke la premiere valeur clé
 			} 
 
-			/* default constructor */
-			explicit BST();
-			/* range constructor */
-			BST();
 			/* copy constructor */
-			BST(const BST& x);
+			BST(const BST& x) : _root(nullptr), _cmp(x._cmp)
+			{
+				// idem - voir si besoin de faire un alloc pour init le tree ou si peut fonctionner sans
+				insert(x.begin(), x.end())
+			}
 			/* assignment operator */
-			BST	&operator=();
-			reference	operator*();
-			pointer		operator->();
-
+			BST	&operator=(const BST& x)
+			{
+				if (*this != x)
+					_root = x._root; // simple swap d'adresse ici mais recopie complete arbre dans map
+				return ( *this );
+			}
 			/* destructor */
-			~BST(); // pe a mettre en virtuel
+			~BST(); // pe a mettre en virtuel si pb lors heritage
 
+
+	// if (node == NULL)
+	// 	return newNode(key);
+	// if (key < node->key)
+	// 	node->left = insert(node->left, key);
+	// else
+	// 	node->right = insert(node->right, key);
+	// return node;
+
+
+
+
+			/* insert */
+			iterator insert(iterator position, const value_type &v);
+			
+			template<class InputIterator>
+			// rajouter typename ft::enable_if<!ft::is_integral<InputIterator>::value, void **>::type = nullptr
+			void	insert(InputIterator first, InputIterator last);
+			
+			pair<iterator, bool> insert(const value_type &v);
+
+
+			/* find */
+			iterator	find(const key_type &k)
+			{
+				return ( _searchNode(_root, k) );
+			}
+			
+			const_iterator	find(const key_type &k) const
+			{
+				return ( _searchNode(_root, k) );
+			}
+
+
+			/* assist functions */
+		protected:
+
+			node_pointer	_searchNode(node_pointer node, const key_type &k)
+			{
+				node_pointer res = node;
+				if (res == NULL)
+					return res;
+				else
+				{
+					if (res->key == key)
+						return res;
+					else if (key < res->key)
+						return _searchNode(res->left, key);
+					else
+						return _searchNode(res->right, key);
+			}
+
+
+/**************************************************************/
+// TO DO
 			iterator	begin();
 			const_iterator begin();
 			iterator	end();
@@ -84,10 +144,7 @@ namespace ft
 			bool		empty();
 			size_type	size();
 
-			/* insert */
-			iterator insert();
-			void	insert();
-			pair<iterator, bool> insert();
+
 
 			void	erase();
 			size_type	erase();
@@ -96,9 +153,7 @@ namespace ft
 			void	swap();
 			void	clear();
 
-			/* other */
-			iterator	find();
-			const_iterator	find();
+
 			size_type	count();
 			iterator	lower_bounds();
 			const_iterator	lower_bounds();
