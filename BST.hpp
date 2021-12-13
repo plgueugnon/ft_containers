@@ -1,9 +1,10 @@
 #ifndef __BST_H__
 #define __BST_H__
 
-#include "BST_iterator.hpp"
 #include "BST_node.hpp"
+#include "BST_iterator.hpp"
 #include "ft_utils.hpp"
+#include "ft_type_resolution.hpp"
 
 #include <memory>
 
@@ -61,7 +62,7 @@ namespace ft
 			} 
 
 			/* copy constructor */
-			BST(const BST& x) : _root(nullptr), _cmp(x._cmp)
+			BST(const BST& x) : _root(nullptr), _comp(x._comp)
 			{
 				// idem - voir si besoin de faire un alloc pour init le tree ou si peut fonctionner sans
 				insert(x.begin(), x.end())
@@ -76,22 +77,25 @@ namespace ft
 			/* destructor */
 			~BST(); // pe a mettre en virtuel si pb lors heritage
 
-
-
-
-
-
-
 			/* insert */
-			iterator insert(iterator position, const value_type &v);
+			iterator insert(iterator position, const value_type &v)
+			{
+				(void)position;
+				return ( _node_insert(_root , v) ); // a verif mais en principe suffit
+			}
 			
 			template<class InputIterator>
-			// rajouter typename ft::enable_if<!ft::is_integral<InputIterator>::value, void **>::type = nullptr
-			void	insert(InputIterator first, InputIterator last);
-			
-			pair<iterator, bool> insert(const value_type &v);
+			// rajouter typename 
+			void	insert(InputIterator first, InputIterator last, 
+					ft::enable_if<!ft::is_integral<InputIterator>::value, void **>::type = nullptr)
 			{
+				for (; first != last, ++first)
+					_node_insert(_root, *first);
+			}
 
+			ft::pair<iterator, bool> insert(const value_type &v)
+			{
+				return ( _node_insert(_root, v) );
 			}
 
 			/* find */
@@ -99,14 +103,14 @@ namespace ft
 			{
 				return ( _searchNode(_root, k) );
 			}
-			
+
 			const_iterator	find(const key_type &k) const
 			{
 				return ( _searchNode(_root, k) );
 			}
 
 
-			/* assist functions */
+		/* assist functions */
 		protected:
 
 			node_pointer	_searchNode(node_pointer node, const key_type &k)
@@ -116,23 +120,16 @@ namespace ft
 					return res;
 				else
 				{
-					if (res->value == key)
+					if (res->value.first == k)
 						return res;
-					else if (key < res->value)
-						return _searchNode(res->left, key);
+					else if (k < res->value.first)
+						return _searchNode(res->left, k);
 					else
-						return _searchNode(res->right, key);
+						return _searchNode(res->right, k);
+				}
 			}
 
-	// if (node == NULL)
-	// 	return newNode(key);
-	// if (key < node->key)
-	// 	node->left = insert(node->left, key);
-	// else
-	// 	node->right = insert(node->right, key);
-	// return node;
-
-			ft::pair<iterator, bool> _node_insert(node_pointer node, const key_type &k)
+			ft::pair<iterator, bool>	_node_insert(node_pointer node, const key_type &k)
 			{
 				node_pointer	iter;
 				while (node) // je cherche la node
@@ -145,8 +142,8 @@ namespace ft
 					else
 						return ( ft::pair<iterator, bool>(iterator(node), false) ); // renvoie un iterateur sur la position dans l'arbre avec faux car key deja existant
 				} //si node pas trouvée = revient a dire node == NULL
-				iter = _node_alloc.allocate(1);
-				_node_alloc.construct(node, node_type(k, iter)) // je construit une node avec la clé valeur passée en arg
+				node = _node_alloc.allocate(1);
+				_node_alloc.construct(node, node_type(k, iter)); // je construit une node avec la clé valeur passée en arg
 				if (iter) // if iter != NULL
 				{
 					if ( k < iter->value ) // si inf => fils gauche
@@ -159,44 +156,59 @@ namespace ft
 				return ( ft::pair<iterator, bool>(iterator(node), true) ); // renvoie iterator true si nouvelle node créée
 			}
 
-/**************************************************************/
-// TO DO
-			iterator	begin();
-			const_iterator begin();
-			iterator	end();
-			const_iterator	end();
-			reverse_iterator	rbegin();
-			const_reverse_iterator	rbegin();
-			reverse_iterator	rend();
-			const_reverse_iterator	rend();
 
-			size_type	max_size();
-			bool		empty();
-			size_type	size();
+			size_type	max_size() { return ( _node_alloc.max_size() ); }
+
+			/**************************************************************/ // TO DO
+			// iterator	begin();
+			// const_iterator begin();
+			// iterator	end();
+			// const_iterator	end();
+			// reverse_iterator	rbegin();
+			// const_reverse_iterator	rbegin();
+			// reverse_iterator	rend();
+			// const_reverse_iterator	rend();
 
 
-
-			void	erase();
-			size_type	erase();
-			void	erase();
-
-			void	swap();
-			void	clear();
+			// bool		empty();
+			// size_type	size();
 
 
-			size_type	count();
-			iterator	lower_bounds();
-			const_iterator	lower_bounds();
-			iterator	upper_bound();
-			const_iterator	upper_bound();
-			equal_range();
 
-			void	rotateL();
-			void	rotateR();
-			node_pointer	get_root();
-			node_pointer	LeftMost();
-			node_pointer	RightMost();
+			// void	erase();
+			// size_type	erase();
+			// void	erase();
 
+			// void	swap();
+			// void	clear();
+
+
+			// size_type	count();
+			// iterator	lower_bounds();
+			// const_iterator	lower_bounds();
+			// iterator	upper_bound();
+			// const_iterator	upper_bound();
+			// equal_range();
+
+			// void	rotateL();
+			// void	rotateR();
+			// node_pointer	get_root();
+
+			node_pointer	LeftMost(node_pointer node) const
+			{
+				node_pointer iter = node;
+				while (iter && iter->left != NULL)
+					iter = iter->left;
+				return ( iter );
+			}
+
+			node_pointer	RightMost(node_pointer node) const
+			{
+				node_pointer iter = node;
+				while (iter && iter->right != NULL)
+					iter = iter->right;
+				return ( iter );
+			}
 	};
 
 }
