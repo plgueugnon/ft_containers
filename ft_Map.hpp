@@ -68,62 +68,66 @@ namespace ft
 			// map<Key,T,Compare,Allocator>& operator=(const map<Key,T,Compare,Allocator>& x);
 
 			// iterators:
-			iterator begin() { return ( iterator(_tree.LeftMost()) ); }
-			const_iterator begin() const { return ( const_iterator(_tree.LeftMost()) ); }
-			iterator end(){ return ( iterator(_tree.RightMost()) ); }
-			const_iterator end() const { return ( const_iterator(_tree.RightMost()) ); }
-			reverse_iterator rbegin() { return ( reverse_iterator(_tree.RightMost()) ); }
-			const_reverse_iterator rbegin() const { return ( const_reverse_iterator(_tree.RightMost()) ); }
-			reverse_iterator rend() { return ( reverse_iterator(_tree.LeftMost()) ); }
-			const_reverse_iterator rend() const { return ( const_reverse_iterator(_tree.LeftMost()) ); }
+			iterator	begin() { return ( iterator(_tree.LeftMost()) ); }
+			const_iterator	begin() const { return ( const_iterator(_tree.LeftMost()) ); }
+			iterator	end() { return ( iterator(_tree.RightMost()) ); }
+			const_iterator	end() const { return ( const_iterator(_tree.RightMost()) ); }
+			reverse_iterator	rbegin() { return ( reverse_iterator(_tree.RightMost()) ); }
+			const_reverse_iterator	rbegin() const { return ( const_reverse_iterator(_tree.RightMost()) ); }
+			reverse_iterator	rend() { return ( reverse_iterator(_tree.LeftMost()) ); }
+			const_reverse_iterator	rend() const { return ( const_reverse_iterator(_tree.LeftMost()) ); }
 
 			// capacity:
-			bool empty() const { return ( _size == 0 ); }
-			size_type size() const { return ( _size ); }
-			size_type max_size() const { return ( _tree.max_size() ); }
+			bool	empty() const { return ( _size == 0 ); }
+			size_type	size() const { return ( _size ); }
+			size_type	max_size() const { return ( _tree.max_size() ); }
 
 			// // 23.3.1.2 element access:
 			// T& operator[](const key_type& x);
 
 			// modifiers:
-			ft::pair<iterator, bool> insert(const value_type& x)
+			ft::pair<iterator, bool>	insert(const value_type& x)
 			{
-				ft::pair<iterator, bool>res =_tree.insert(x);
+				ft::pair<iterator, bool> res =_tree.insert(x);
 				if (res.second == true)// si value a bien été trouvée 
 					_size++; // alors j'ai ajouté un node
 				return ( res );
 			}
 
-			iterator insert(iterator position, const value_type& x)
+			iterator	insert(iterator position, const value_type& x)
 			{
-				iterator res = _tree.insert(position, x);
-				if (res != end() ) //veriflogique
+				(void)position;
+				ft::pair<iterator, bool> res =_tree.insert(x);
+				if (res.second == true )
 					_size++;
-				return ( res );
+				return ( res.first );
 			}
 			
 			template <class InputIterator>
-			void insert(InputIterator first, InputIterator last,
-				typename ft::enable_if<!ft::is_integral<InputIterator>::value, void **>::type = nullptr)
+			void	insert(InputIterator first, InputIterator last,
+					typename ft::enable_if<!ft::is_integral<InputIterator>::value, void **>::type = nullptr)
 			{
 				for(; first != last; ++first)
 					insert(*insert);
 			}
 
-
 			// void erase(iterator position);
 			// size_type erase(const key_type& x);
 			// void erase(iterator first, iterator last);
 			// void swap(map<Key,T,Compare,Allocator>&);
-			// void clear();
+			void clear() 
+			{
+				_tree.clear();
+				_size = 0;
+			}
 
 			// // observers:
 			// key_compare key_comp() const;
 			// value_compare value_comp() const;
 
 			// 23.3.1.3 map operations:
-			iterator find(const key_type& x);
-			const_iterator find(const key_type& x) const;
+			iterator find(const key_type& x) { return ( iterator( _tree.find(k) ) ); }
+			const_iterator find(const key_type& x) const { return ( const_iterator( _tree.find(k) ); }
 
 			// size_type count(const key_type& x) const;
 			// iterator lower_bound(const key_type& x);

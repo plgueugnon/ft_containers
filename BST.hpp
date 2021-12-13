@@ -83,7 +83,7 @@ namespace ft
 				(void)position;
 				return ( _node_insert(_root , v) ); // a verif mais en principe suffit
 			}
-			
+
 			template<class InputIterator>
 			// rajouter typename 
 			void	insert(InputIterator first, InputIterator last, 
@@ -109,6 +109,25 @@ namespace ft
 				return ( _searchNode(_root, k) );
 			}
 
+			size_type	max_size() { return ( _node_alloc.max_size() ); }
+
+			node_pointer	LeftMost(node_pointer node) const
+			{
+				node_pointer iter = node;
+				while (iter && iter->left != NULL)
+					iter = iter->left;
+				return ( iter );
+			}
+
+			node_pointer	RightMost(node_pointer node) const
+			{
+				node_pointer iter = node;
+				while (iter && iter->right != NULL)
+					iter = iter->right;
+				return ( iter );
+			}
+
+			void	clear() { _destroy(_root); }
 
 		/* assist functions */
 		protected:
@@ -156,8 +175,18 @@ namespace ft
 				return ( ft::pair<iterator, bool>(iterator(node), true) ); // renvoie iterator true si nouvelle node créée
 			}
 
+			void	_destroy(node_pointer& root)
+			{
+				if (root)
+				{
+					_destroy(root->left);
+					_destroy(root->right);
+					_node_alloc.destroy(root);
+					_node_alloc.deallocate(root, 1);
+					root = nullptr;
+				}
+			}
 
-			size_type	max_size() { return ( _node_alloc.max_size() ); }
 
 			/**************************************************************/ // TO DO
 			// iterator	begin();
@@ -180,7 +209,7 @@ namespace ft
 			// void	erase();
 
 			// void	swap();
-			// void	clear();
+
 
 
 			// size_type	count();
@@ -194,21 +223,7 @@ namespace ft
 			// void	rotateR();
 			// node_pointer	get_root();
 
-			node_pointer	LeftMost(node_pointer node) const
-			{
-				node_pointer iter = node;
-				while (iter && iter->left != NULL)
-					iter = iter->left;
-				return ( iter );
-			}
 
-			node_pointer	RightMost(node_pointer node) const
-			{
-				node_pointer iter = node;
-				while (iter && iter->right != NULL)
-					iter = iter->right;
-				return ( iter );
-			}
 	};
 
 }
