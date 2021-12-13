@@ -77,13 +77,7 @@ namespace ft
 			~BST(); // pe a mettre en virtuel si pb lors heritage
 
 
-	// if (node == NULL)
-	// 	return newNode(key);
-	// if (key < node->key)
-	// 	node->left = insert(node->left, key);
-	// else
-	// 	node->right = insert(node->right, key);
-	// return node;
+
 
 
 
@@ -96,7 +90,9 @@ namespace ft
 			void	insert(InputIterator first, InputIterator last);
 			
 			pair<iterator, bool> insert(const value_type &v);
+			{
 
+			}
 
 			/* find */
 			iterator	find(const key_type &k)
@@ -120,14 +116,48 @@ namespace ft
 					return res;
 				else
 				{
-					if (res->key == key)
+					if (res->value == key)
 						return res;
-					else if (key < res->key)
+					else if (key < res->value)
 						return _searchNode(res->left, key);
 					else
 						return _searchNode(res->right, key);
 			}
 
+	// if (node == NULL)
+	// 	return newNode(key);
+	// if (key < node->key)
+	// 	node->left = insert(node->left, key);
+	// else
+	// 	node->right = insert(node->right, key);
+	// return node;
+
+			ft::pair<iterator, bool> _node_insert(node_pointer node, const key_type &k)
+			{
+				node_pointer	iter;
+				while (node) // je cherche la node
+				{
+					iter = node; // prend addresse root / pt depart insertion
+					if ( k < node->value )
+						node = node->left;
+					else if (k > node->right)
+						node = node->right;
+					else
+						return ( ft::pair<iterator, bool>(iterator(node), false) ); // renvoie un iterateur sur la position dans l'arbre avec faux car key deja existant
+				} //si node pas trouvée = revient a dire node == NULL
+				iter = _node_alloc.allocate(1);
+				_node_alloc.construct(node, node_type(k, iter)) // je construit une node avec la clé valeur passée en arg
+				if (iter) // if iter != NULL
+				{
+					if ( k < iter->value ) // si inf => fils gauche
+						iter->left = node;
+					else
+						iter->right = node; // sinon fils droite
+				}
+				else
+					_root = node;// si aucune node existe => root prend adresse
+				return ( ft::pair<iterator, bool>(iterator(node), true) ); // renvoie iterator true si nouvelle node créée
+			}
 
 /**************************************************************/
 // TO DO
