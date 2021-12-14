@@ -26,7 +26,9 @@ int main()
 
 	ft::map<char,int> second (first.begin(),first.end());
 
-	// ft::map<char,int> third (second);
+	std::cout << "third test\n";
+
+	ft::map<char,int> third (second);
 
 	// ft::map<char,int,classcomp> fourth;					// class as Compare
 

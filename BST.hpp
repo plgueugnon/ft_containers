@@ -25,6 +25,7 @@ namespace ft
 
 			/* typedef of RB_tree node */
 			typedef	ft::BST_node<value_type>				node_type; // contenu d'une node
+			// typedef	ft::BST_node<const value_type>				const_node_type;
 			typedef node_type*								node_pointer; // ptr sur node
 			typedef std::allocator<node_type>				node_allocator; // allocator de node
 
@@ -36,8 +37,8 @@ namespace ft
 			typedef typename Allocator::const_pointer		const_pointer;
 
 			/* iterators */
-			typedef ft::BST_iterator<value_type>						iterator;
-			typedef ft::BST_iterator<const value_type>				const_iterator;
+			typedef ft::BST_iterator<node_type>						iterator;
+			typedef ft::BST_const_iterator<node_type>				const_iterator; // erreur ici en enlevant const
 			typedef ft::reverse_iterator<iterator>			reverse_iterator;
 			typedef ft::reverse_iterator<const_iterator>	const_reverse_iterator;
 
@@ -71,14 +72,14 @@ namespace ft
 				insert(x.begin(), x.end());
 			}
 			/* assignment operator */
-			BST	&operator=(const BST& x)
+			BST	&operator=(const BST &x)
 			{
 				if (*this != x)
 					_root = x._root; // simple swap d'adresse ici mais recopie complete arbre dans map
 				return ( *this );
 			}
 			/* destructor */
-			~BST(); // pe a mettre en virtuel si pb lors heritage
+			virtual ~BST() { clear(); } // pe a mettre en virtuel si pb lors heritage
 
 			/* insert */
 			iterator insert(iterator position, const value_type &v)
@@ -113,17 +114,17 @@ namespace ft
 
 			size_type	max_size() { return ( _node_alloc.max_size() ); }
 
-			node_pointer	LeftMost(node_pointer node) const
+			node_pointer	LeftMost() const
 			{
-				node_pointer iter = node;
+				node_pointer iter = _root;
 				while (iter && iter->left != NULL)
 					iter = iter->left;
 				return ( iter );
 			}
 
-			node_pointer	RightMost(node_pointer node) const
+			node_pointer	RightMost() const
 			{
-				node_pointer iter = node;
+				node_pointer iter = _root;
 				while (iter && iter->right != NULL)
 					iter = iter->right;
 				return ( iter );
@@ -131,32 +132,33 @@ namespace ft
 
 			void	clear() { _destroy(_root); }
 
+
 			iterator	begin() 
 			{
-				return ( iterator(LeftMost(_root)) );
+				return ( iterator(LeftMost()) );
 			}
 			const_iterator begin() const 
 			{
-				return ( const_iterator(this->LeftMost(_root)) );
+				return ( const_iterator(LeftMost()) );
 			}
 			iterator	end() 
 			{
-				return ( iterator(this->RightMost(_root)) );
+				return ( iterator(RightMost()) );
 			}
 			const_iterator	end() const
 			{
-				return ( const_iterator(this->RightMost(_root)) );
+				return ( const_iterator(RightMost()) );
 			}
 			reverse_iterator	rbegin() 
 			{
-				return ( reverse_iterator(this->RightMost(_root)) );
+				return ( reverse_iterator(RightMost(), NULL) );
 			}
 			const_reverse_iterator	rbegin() const
 			{
-				return ( const_reverse_iterator(this->RightMost(_root)) );
+				return ( const_reverse_iterator(RightMost(), NULL) );
 			}
-			reverse_iterator	rend() { return ( reverse_iterator(this->LeftMost(_root)) ); }
-			const_reverse_iterator	rend() const { return ( const_reverse_iterator(this->LeftMost(_root)) ); }
+			reverse_iterator	rend() { return ( reverse_iterator(LeftMost(), NULL) ); }
+			const_reverse_iterator	rend() const { return ( const_reverse_iterator(LeftMost(), NULL) ); }
 
 
 		/* assist functions */
@@ -178,24 +180,24 @@ namespace ft
 				}
 			}
 
-			ft::pair<iterator, bool>	_node_insert(node_pointer node, const key_type &k)
+			ft::pair<iterator, bool>	_node_insert(node_pointer node, const value_type &k)
 			{
 				node_pointer	iter;
 				while (node) // je cherche la node
 				{
 					iter = node; // prend addresse root / pt depart insertion
-					if ( k < node->value )
+					if ( k.first < node->value.first )
 						node = node->left;
-					else if (k > node->right)
+					else if (k.first > node->value.first)
 						node = node->right;
 					else
 						return ( ft::pair<iterator, bool>(iterator(node), false) ); // renvoie un iterateur sur la position dans l'arbre avec faux car key deja existant
 				} //si node pas trouvée = revient a dire node == NULL
 				node = _node_alloc.allocate(1);
-				_node_alloc.construct(node, node_type(k, iter)); // je construit une node avec la clé valeur passée en arg
+				_node_alloc.construct(node, node_type(k)); // je construit une node avec la clé valeur passée en arg
 				if (iter) // if iter != NULL
 				{
-					if ( k < iter->value ) // si inf => fils gauche
+					if ( k.first < iter->value.first ) // si inf => fils gauche
 						iter->left = node;
 					else
 						iter->right = node; // sinon fils droite

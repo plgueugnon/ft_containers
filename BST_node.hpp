@@ -7,6 +7,7 @@ namespace ft
 	struct BST_node
 	{
 		/* la value reçue dans BST_node est une paire key, value */
+		typedef T value_type;
 		T			value;
 		BST_node	*parent;
 		BST_node	*left;
@@ -17,7 +18,7 @@ namespace ft
 		/* constructor by value - giving a new value and a default color */
 		BST_node(const T& value) : value(value), parent(nullptr), left(nullptr), right(nullptr) {}
 		/* destructor */
-		~BST_node();
+		virtual ~BST_node() {}
 		/* copy constructor */ // is_used ?
 		BST_node(BST_node const &x) : value(x.value), parent(x.parent), left(x.left), right(x.right) {}
 
