@@ -10,14 +10,17 @@
 
 namespace ft
 {
-	template <class Key, class T, class Compare = ft::less<Key>, class Allocator = std::allocator<pair<const Key, T> > >
+	template <class T, class Compare = ft::less<typename T::first_type>, class Allocator = std::allocator<T> >
 	class BST
 	{
 		public:
 			/* basic typedef of MAP */
-			typedef Key										key_type; // cle de tri
-			typedef T										mapped_type; // valeur trie
-			typedef ft::pair<const Key, T>					value_type; // valeur contenu dans les nodes
+			// typedef Key										key_type; // cle de tri
+			// typedef T										mapped_type; // valeur trie
+			// typedef ft::pair<const Key, T>					value_type; // valeur contenu dans les nodes
+			typedef T										value_type;
+			typedef typename T::first_type					key_type;
+			typedef typename T::second_type					mapped_type;
 			typedef Compare									key_compare; // boolen de comparaison a < b
 
 			/* typedef of RB_tree node */
@@ -128,17 +131,32 @@ namespace ft
 
 			void	clear() { _destroy(_root); }
 
-			// iterator	begin() 
-			// {
-			// 	return ( iterator(LeftMost(_root)) );
-			// }
-			// const_iterator begin() const { return ( const_iterator(LeftMost(_root)) ); }
-			// iterator	end() { return ( iterator(RightMost(_root)) ); }
-			// const_iterator	end() const { return ( const_iterator(RightMost(_root)) ); }
-			// reverse_iterator	rbegin() { return ( reverse_iterator(RightMost(_root)) ); }
-			// const_reverse_iterator	rbegin() const { return ( const_reverse_iterator(RightMost(_root)) ); }
-			// reverse_iterator	rend() ( reverse_iterator(LeftMost(_root)) ); }
-			// const_reverse_iterator	rend() const { return ( const_reverse_iterator(LeftMost(_root)) ); }
+			iterator	begin() 
+			{
+				return ( iterator(LeftMost(_root)) );
+			}
+			const_iterator begin() const 
+			{
+				return ( const_iterator(this->LeftMost(_root)) );
+			}
+			iterator	end() 
+			{
+				return ( iterator(this->RightMost(_root)) );
+			}
+			const_iterator	end() const
+			{
+				return ( const_iterator(this->RightMost(_root)) );
+			}
+			reverse_iterator	rbegin() 
+			{
+				return ( reverse_iterator(this->RightMost(_root)) );
+			}
+			const_reverse_iterator	rbegin() const
+			{
+				return ( const_reverse_iterator(this->RightMost(_root)) );
+			}
+			reverse_iterator	rend() { return ( reverse_iterator(this->LeftMost(_root)) ); }
+			const_reverse_iterator	rend() const { return ( const_reverse_iterator(this->LeftMost(_root)) ); }
 
 
 		/* assist functions */

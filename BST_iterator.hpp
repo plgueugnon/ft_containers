@@ -13,7 +13,8 @@ namespace ft
 	{
 		public:
 			typedef T *																			node_ptr;
-			typedef typename ft::iterator<ft::bidirectional_iterator_tag, T>::value_type		value_type;
+			// typedef typename ft::iterator<ft::bidirectional_iterator_tag, T>::value_type		value_type;
+			typedef typename T::value															value_type;
 			typedef typename ft::iterator<ft::bidirectional_iterator_tag, T>::difference_type	difference_type;
 			typedef typename ft::iterator<ft::bidirectional_iterator_tag, T>::pointer			pointer;
 			typedef typename ft::iterator<ft::bidirectional_iterator_tag, T>::reference			reference;
