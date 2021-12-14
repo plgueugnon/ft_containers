@@ -21,7 +21,7 @@ namespace ft
 			typedef Compare									key_compare; // boolen de comparaison a < b
 
 			/* typedef of RB_tree node */
-			typedef	ft::BST_node<T>							node_type; // contenu d'une node
+			typedef	ft::BST_node<value_type>				node_type; // contenu d'une node
 			typedef node_type*								node_pointer; // ptr sur node
 			typedef std::allocator<node_type>				node_allocator; // allocator de node
 
@@ -30,11 +30,11 @@ namespace ft
 			typedef typename Allocator::reference			reference;
 			typedef typename Allocator::const_reference 	const_reference;
 			typedef typename Allocator::pointer				pointer;
-			typedef typename Allocator::const_pointer		pointer;
+			typedef typename Allocator::const_pointer		const_pointer;
 
 			/* iterators */
-			typedef ft::BST_iterator<T>						iterator;
-			typedef ft::BST_iterator<const T>				const_iterator;
+			typedef ft::BST_iterator<value_type>						iterator;
+			typedef ft::BST_iterator<const value_type>				const_iterator;
 			typedef ft::reverse_iterator<iterator>			reverse_iterator;
 			typedef ft::reverse_iterator<const_iterator>	const_reverse_iterator;
 
@@ -54,7 +54,7 @@ namespace ft
 
 			/* construit node a partir comparateur booleen Compare */
 			/* Member type key_compare is the internal comparison object type used by the container */
-			BST(key_compare &c = key_compare())
+			BST(const key_compare &c = key_compare())
 			{
 				// a voir si obligatoire de allocate un node null pour que marche
 				_root = nullptr; // init la root sur NULL car arbre vide / avec 1 seule node
@@ -65,7 +65,7 @@ namespace ft
 			BST(const BST& x) : _root(nullptr), _comp(x._comp)
 			{
 				// idem - voir si besoin de faire un alloc pour init le tree ou si peut fonctionner sans
-				insert(x.begin(), x.end())
+				insert(x.begin(), x.end());
 			}
 			/* assignment operator */
 			BST	&operator=(const BST& x)
@@ -85,11 +85,10 @@ namespace ft
 			}
 
 			template<class InputIterator>
-			// rajouter typename 
 			void	insert(InputIterator first, InputIterator last, 
-					ft::enable_if<!ft::is_integral<InputIterator>::value, void **>::type = nullptr)
+					typename ft::enable_if<!ft::is_integral<InputIterator>::value, void **>::type = nullptr)
 			{
-				for (; first != last, ++first)
+				for (; first != last; ++first)
 					_node_insert(_root, *first);
 			}
 
@@ -128,6 +127,19 @@ namespace ft
 			}
 
 			void	clear() { _destroy(_root); }
+
+			// iterator	begin() 
+			// {
+			// 	return ( iterator(LeftMost(_root)) );
+			// }
+			// const_iterator begin() const { return ( const_iterator(LeftMost(_root)) ); }
+			// iterator	end() { return ( iterator(RightMost(_root)) ); }
+			// const_iterator	end() const { return ( const_iterator(RightMost(_root)) ); }
+			// reverse_iterator	rbegin() { return ( reverse_iterator(RightMost(_root)) ); }
+			// const_reverse_iterator	rbegin() const { return ( const_reverse_iterator(RightMost(_root)) ); }
+			// reverse_iterator	rend() ( reverse_iterator(LeftMost(_root)) ); }
+			// const_reverse_iterator	rend() const { return ( const_reverse_iterator(LeftMost(_root)) ); }
+
 
 		/* assist functions */
 		protected:
@@ -189,14 +201,7 @@ namespace ft
 
 
 			/**************************************************************/ // TO DO
-			// iterator	begin();
-			// const_iterator begin();
-			// iterator	end();
-			// const_iterator	end();
-			// reverse_iterator	rbegin();
-			// const_reverse_iterator	rbegin();
-			// reverse_iterator	rend();
-			// const_reverse_iterator	rend();
+
 
 
 			// bool		empty();

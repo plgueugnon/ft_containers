@@ -62,7 +62,7 @@ namespace ft
 
 		T1 first;
 		T2 second;
-		pair() : first(T1), second(T2) {}
+		pair() : first(), second() {}
 		pair(const T1& x, const T2& y) : first(x), second(y) {}
 		
 		template<class U, class V>
@@ -78,6 +78,29 @@ namespace ft
 			return ( *this );
 		}
 	};
+
+	/* https://www.cplusplus.com/reference/utility/make_pair/ */
+	template <class T1,class T2>
+	pair<T1,T2> make_pair(T1 x, T2 y)
+	{
+		return ( pair<T1,T2>( x, y ) );
+	}
+
+	template <class Arg1, class Arg2, class Result>
+	struct binary_function
+	{
+		typedef Arg1 first_argument_type;
+		typedef Arg2 second_argument_type;
+		typedef Result result_type;
+	};
+
+	/* https://www.cplusplus.com/reference/functional/less/?kw=less */
+	template <class T> struct less : ft::binary_function <T,T,bool>
+	{
+		bool operator() (const T& x, const T& y) const 
+		{ return ( x < y );}
+	};
+
 
 	template <class T1, class T2>
 	bool operator==(const pair<T1,T2>& lhs, const pair<T1,T2>& rhs)
@@ -104,28 +127,6 @@ namespace ft
 	{ return !( lhs < rhs ); }
 	
 	template <class T1, class T2> pair<T1,T2> make_pair(const T1&, const T2&);
-
-	/* https://www.cplusplus.com/reference/utility/make_pair/ */
-	template <class T1,class T2>
-	pair<T1,T2> make_pair(T1 x, T2 y)
-	{
-		return ( pair<T1,T2>( x, y ) );
-	}
-
-	template <class Arg1, class Arg2, class Result>
-	struct binary_function
-	{
-		typedef Arg1 first_argument_type;
-		typedef Arg2 second_argument_type;
-		typedef Result result_type;
-	};
-
-	/* https://www.cplusplus.com/reference/functional/less/?kw=less */
-	template <class T> struct less : ft::binary_function <T,T,bool>
-	{
-		bool operator() (const T& x, const T& y) const 
-		{ return ( x < y );}
-	};
 
 
 }

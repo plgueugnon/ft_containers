@@ -11,22 +11,22 @@ namespace ft
 	{
 		public:
 			// types:
-			typedef Key key_type;
-			typedef T mapped_type;
-			typedef ft::pair<const Key, T> value_type;
-			typedef Compare key_compare;
-			typedef Allocator allocator_type;
-			typedef typename Allocator::reference reference;
-			typedef typename Allocator::const_reference const_reference;
-			typedef typename ft::BST<value_type, key_compare>::node_type node_type;
-			typedef typename ft::BST<value_type, key_compare>::iterator iterator; // See 23.1
-			typedef typename ft::BST<value_type, key_compare>::const_iterator const_iterator; // See 23.1
-			typedef size_t size_type;
-			typedef ptrdiff_t difference_type;
-			typedef typename Allocator::pointer pointer;
-			typedef typename Allocator::const_pointer const_pointer;
-			typedef std::reverse_iterator<iterator> reverse_iterator;
-			typedef std::reverse_iterator<const_iterator> const_reverse_iterator;
+			typedef Key															key_type;
+			typedef T															mapped_type;
+			typedef ft::pair<const Key, T>										value_type;
+			typedef Compare														key_compare;
+			typedef Allocator													allocator_type;
+			typedef typename Allocator::reference								reference;
+			typedef typename Allocator::const_reference							const_reference;
+			typedef typename ft::BST<value_type, key_compare>::node_type		node_type;
+			typedef typename ft::BST<value_type, key_compare>::iterator			iterator;
+			typedef typename ft::BST<value_type, key_compare>::const_iterator	const_iterator;
+			typedef size_t														size_type;
+			typedef ptrdiff_t													difference_type;
+			typedef typename Allocator::pointer									pointer;
+			typedef typename Allocator::const_pointer							const_pointer;
+			typedef std::reverse_iterator<iterator>								reverse_iterator;
+			typedef std::reverse_iterator<const_iterator>						const_reverse_iterator;
 
 		class value_compare : public binary_function<value_type,value_type,bool>
 		{
@@ -55,8 +55,9 @@ namespace ft
 			template <class InputIterator>
 			map(InputIterator first, InputIterator last, const Compare& comp = Compare(), const Allocator& a = Allocator(),
 				typename ft::enable_if<!ft::is_integral<InputIterator>::value, void **>::type = nullptr )
-				: _size(0), _tree(node_type(comp)), _alloc(a)
+				: _comp(comp), _alloc(a), _size(0)
 			{
+				_tree = node_type(comp);
 				for(; first != last; ++first)
 					insert(*first);
 			}
@@ -65,17 +66,27 @@ namespace ft
 			map(const map<Key,T,Compare,Allocator>& x) : _tree(x._tree), _alloc(x._alloc), _size(x._size) {}
 			~map() {}// pe a mettre en virtual
 			
-			// map<Key,T,Compare,Allocator>& operator=(const map<Key,T,Compare,Allocator>& x);
+			map<Key,T,Compare,Allocator>& operator=(const map<Key,T,Compare,Allocator>& x)
+			{
+				if ( *this != x )
+				{
+					_alloc = x._alloc;
+					_size = x._size;
+					_tree.clear();
+					_tree.insert(x.begin(), x.end());
+				}
+				return ( *this );
+			}
 
 			// iterators:
-			iterator	begin() { return ( iterator(_tree.LeftMost()) ); }
-			const_iterator	begin() const { return ( const_iterator(_tree.LeftMost()) ); }
-			iterator	end() { return ( iterator(_tree.RightMost()) ); }
-			const_iterator	end() const { return ( const_iterator(_tree.RightMost()) ); }
-			reverse_iterator	rbegin() { return ( reverse_iterator(_tree.RightMost()) ); }
-			const_reverse_iterator	rbegin() const { return ( const_reverse_iterator(_tree.RightMost()) ); }
-			reverse_iterator	rend() { return ( reverse_iterator(_tree.LeftMost()) ); }
-			const_reverse_iterator	rend() const { return ( const_reverse_iterator(_tree.LeftMost()) ); }
+			iterator	begin() { return ( iterator(_tree.begin()) ); }
+			const_iterator	begin() const { return ( const_iterator(_tree.begin()) ); }
+			iterator	end() { return ( iterator(_tree.end()) ); }
+			const_iterator	end() const { return ( const_iterator(_tree.end()) ); }
+			reverse_iterator	rbegin() { return ( reverse_iterator(_tree.rbegin()) ); }
+			const_reverse_iterator	rbegin() const { return ( const_reverse_iterator(_tree.rbegin()) ); }
+			reverse_iterator	rend() { return ( reverse_iterator(_tree.rend()) ); }
+			const_reverse_iterator	rend() const { return ( const_reverse_iterator(_tree.rend()) ); }
 
 			// capacity:
 			bool	empty() const { return ( _size == 0 ); }
@@ -108,7 +119,7 @@ namespace ft
 					typename ft::enable_if<!ft::is_integral<InputIterator>::value, void **>::type = nullptr)
 			{
 				for(; first != last; ++first)
-					insert(*insert);
+					insert(*first);
 			}
 
 			// void erase(iterator position);
@@ -126,8 +137,8 @@ namespace ft
 			// value_compare value_comp() const;
 
 			// 23.3.1.3 map operations:
-			iterator find(const key_type& x) { return ( iterator( _tree.find(k) ) ); }
-			const_iterator find(const key_type& x) const { return ( const_iterator( _tree.find(k) ); }
+			iterator find(const key_type& x) { return ( iterator( _tree.find(x)) ); }
+			const_iterator find(const key_type& x) const { return ( const_iterator( _tree.find(x)) ); }
 
 			// size_type count(const key_type& x) const;
 			// iterator lower_bound(const key_type& x);

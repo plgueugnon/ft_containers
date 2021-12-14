@@ -13,16 +13,16 @@ namespace ft
 		BST_node	*right;
 
 		/* default constructor */
-		BST_node() : value(), parent(nullptr), left(nullptr), right(nullptr), color() {}
+		BST_node() : value(), parent(nullptr), left(nullptr), right(nullptr) {}
 		/* constructor by value - giving a new value and a default color */
-		BST_node(const T& value, e_color color = RED) : parent(nullptr), right(nullptr), left(nullptr), value(value), color(color) {}
-		/* destrutor */
+		BST_node(const T& value) : value(value), parent(nullptr), left(nullptr), right(nullptr) {}
+		/* destructor */
 		~BST_node();
 		/* copy constructor */ // is_used ?
-		BST_node(BST_node const &x) : value(x.value), parent(x.parent), left(x.left), right(x.right), color(x.color) {}
+		BST_node(BST_node const &x) : value(x.value), parent(x.parent), left(x.left), right(x.right) {}
 
 		/* assignement operator */
-		BST_node	&operator(BST_node const &rhs)
+		BST_node	&operator=(BST_node const &rhs)
 		{
 			if (*this != rhs)
 			{

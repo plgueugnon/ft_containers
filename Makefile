@@ -6,7 +6,7 @@
 #    By: pgueugno <pgueugno@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/01/21 14:58:12 by pgueugno          #+#    #+#              #
-#    Updated: 2021/12/06 13:22:58 by pgueugno         ###   ########.fr        #
+#    Updated: 2021/12/14 09:56:07 by pgueugno         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -28,7 +28,7 @@ LIBFT_MAKE	=	Makefile
 #                               Sources filenames                              #
 ################################################################################
 
-SRCS		=	main_vector.cpp
+SRCS		=	main_map.cpp #main_vector.cpp
 
 ################################################################################
 #                              Commands and arguments                          #

@@ -12,7 +12,7 @@ namespace ft
 	class BST_iterator : ft::iterator<ft::bidirectional_iterator_tag, T>
 	{
 		public:
-			typedef T*																			node_ptr;
+			typedef T *																			node_ptr;
 			typedef typename ft::iterator<ft::bidirectional_iterator_tag, T>::value_type		value_type;
 			typedef typename ft::iterator<ft::bidirectional_iterator_tag, T>::difference_type	difference_type;
 			typedef typename ft::iterator<ft::bidirectional_iterator_tag, T>::pointer			pointer;
@@ -43,7 +43,7 @@ namespace ft
 
 			// je dois acceder a l'element value car mon pointeur est sur un objet BST_node et non sur 
 			// un tableau comme dans vector me permettant d'accéder directement à l'information sous-jacente
-			reference	operator*( void ) const { return ( *_node->value ); }
+			reference	operator*( void ) const { return ( _node->value ); } // pas * car deja un ptr * en alias
 			pointer	operator->( void ) const { return ( &( operator*() ) );}
 			node_ptr	base() { return ( _node ); }
 
