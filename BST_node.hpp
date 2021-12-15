@@ -1,6 +1,9 @@
 #ifndef __BST_NODE_H__
 #define __BST_NODE_H__
 
+// header pour compiler avec NULL
+#include <cstddef>
+
 namespace ft
 {
 	template<typename T>
@@ -16,7 +19,12 @@ namespace ft
 		/* default constructor */
 		BST_node() : value(), parent(nullptr), left(nullptr), right(nullptr) {}
 		/* constructor by value - giving a new value and a default color */
-		BST_node(const T& value) : value(value), parent(nullptr), left(nullptr), right(nullptr) {}
+		BST_node(const T& value) : value(value)
+		{
+			parent = nullptr;
+			left = nullptr;
+			right = nullptr;
+		}
 		/* destructor */
 		virtual ~BST_node() {}
 		/* copy constructor */ // is_used ?

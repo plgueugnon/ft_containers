@@ -27,6 +27,7 @@ namespace ft
 			typedef	ft::BST_node<value_type>				node_type; // contenu d'une node
 			// typedef	ft::BST_node<const value_type>				const_node_type;
 			typedef node_type*								node_pointer; // ptr sur node
+			typedef node_type&								node_reference;
 			typedef std::allocator<node_type>				node_allocator; // allocator de node
 
 			/* pointer & reference */
@@ -48,7 +49,7 @@ namespace ft
 
 		private:
 			node_pointer		_root; // ptr sur node // sert de point depart depuis le haut de l'arbre pour chaque operation
-			//node_pointer		_nil; // a voir si utile
+			node_pointer		_nil; // a voir si utile
 			size_type			_size;
 			node_allocator		_node_alloc;
 			key_compare			_comp;
@@ -68,7 +69,7 @@ namespace ft
 			/* copy constructor */
 			BST(const BST& x) : _root(nullptr), _comp(x._comp)
 			{
-				std::cout << "BST RANGE construct\n";
+				// std::cout << "BST RANGE construct\n";
 				// idem - voir si besoin de faire un alloc pour init le tree ou si peut fonctionner sans
 				insert(x.begin(), x.end());
 			}
@@ -85,7 +86,7 @@ namespace ft
 			/* insert */
 			iterator insert(iterator position, const value_type &v)
 			{
-				std::cout << "BST insert1\n";
+				// std::cout << "BST insert1\n";
 				(void)position;
 				return ( _node_insert(_root , v) ); // a verif mais en principe suffit
 			}
@@ -94,14 +95,28 @@ namespace ft
 			void	insert(InputIterator first, InputIterator last, 
 					typename ft::enable_if<!ft::is_integral<InputIterator>::value, void **>::type = nullptr)
 			{
-				std::cout << "BST insert2 (RANGE)\n";
-				for (; first != last; ++first)
-					_node_insert(_root, first->value.first);
+				// std::cout << "BST insert2 (RANGE)\n";
+				// std::cout << &first << "\n";
+				// std::cout << &(*first) << "\n";
+				// std::cout << &last<< "\n";
+				// std::cout << &(*last) << "\n";
+				// std::cout << "check first " << first->second << " + " << first->first << '\n';
+				// std::cout << "check second " << last->second << " + " << last->first << '\n';
+				// std::cout << first->first << "\n";
+				// std::cout << "addr parent " << first
+				for (; first != last; first++)
+				{
+					std::cout << "sending with address: " << &first << '\n';
+					std::cout << "sending with address: " << &(*first) << '\n';
+					std::cout << "sending : " << first->first << '\n';
+					_node_insert(_root, *first);
+				}
+				_node_insert(_root, *first); // RUSTINE A PB ++ !!
 			}
 
 			ft::pair<iterator, bool> insert(const value_type &v)
 			{
-				std::cout << "BST insert3\n";
+				// std::cout << "BST insert3\n";
 				return ( _node_insert(_root, v) );
 			}
 
@@ -116,25 +131,31 @@ namespace ft
 				return ( _searchNode(_root, k) );
 			}
 
-			size_type	max_size() { return ( _node_alloc.max_size() ); }
+			size_type	max_size() const { return ( _node_alloc.max_size() ); }
 
 			node_pointer	LeftMost() const
 			{
-				std::cout << "BST Leftmost\n";
+				// std::cout << "BST Leftmost\n";
 				node_pointer iter = _root;
 				// while (iter && iter->left != NULL)
-				while (iter)
-					iter = iter->left;
+				if ( iter )
+				{
+					while (iter->left != NULL)
+						iter = iter->left;
+				}
 				return ( iter );
 			}
 
 			node_pointer	RightMost() const
 			{
-				std::cout << "BST Rightmost\n";
+				// std::cout << "BST Rightmost\n";
 				node_pointer iter = _root;
 				// while (iter && iter->right != NULL)
-				while (iter)
-					iter = iter->right;
+				if (iter)
+				{
+					while (iter->right != NULL)
+						iter = iter->right;
+				}
 				return ( iter );
 			}
 
@@ -178,6 +199,15 @@ namespace ft
 			reverse_iterator	rend() { return ( reverse_iterator(LeftMost(), NULL) ); }
 			const_reverse_iterator	rend() const { return ( const_reverse_iterator(LeftMost(), NULL) ); }
 
+			node_reference	operator*() const
+			{
+				return ( _root );
+			}
+
+			node_pointer	operator->() const
+			{
+				return ( &(operator*()) );
+			}
 
 		/* assist functions */
 		protected:
@@ -211,11 +241,15 @@ namespace ft
 			ft::pair<iterator, bool>	_node_insert(node_pointer node, const value_type &k)
 			{
 				std::cout << "BST node insert\n";
+				std::cout << "inserting : " << k.first << " + " << k.second << '\n';
 				node_pointer	iter = NULL;
 				while (node) // je cherche la node
 				{
 					std::cout << "BST node insert check 1\n";
 					iter = node; // prend addresse root / pt depart insertion
+					std::cout << "1 " << k.first << "\n";
+					std::cout << "2 " << &node->value << "\n";
+					std::cout << "3 " << node->value.first << " + " << node->value.second << "\n";
 					if ( k.first < node->value.first )
 						node = node->left;
 					else if (k.first > node->value.first)
@@ -224,7 +258,11 @@ namespace ft
 						return ( ft::pair<iterator, bool>(iterator(node), false) ); // renvoie un iterateur sur la position dans l'arbre avec faux car key deja existant
 				} //si node pas trouvée = revient a dire node == NULL
 				node = _node_alloc.allocate(1);
+
 				_node_alloc.construct(node, node_type(k)); // je construit une node avec la clé valeur passée en arg
+				node->parent = nullptr;
+				node->left = nullptr;
+				node->right = nullptr;
 				if (iter) // if iter != NULL
 				{
 					std::cout << "BST node insert check 2\n";
@@ -235,6 +273,7 @@ namespace ft
 				}
 				else
 					_root = node;// si aucune node existe => root prend adresse
+				std::cout << "checking root value = " << _root->value.first << '\n';
 				return ( ft::pair<iterator, bool>(iterator(node), true) ); // renvoie iterator true si nouvelle node créée
 			}
 

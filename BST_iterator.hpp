@@ -52,18 +52,37 @@ namespace ft
 			 /* used to go to next value up in the tree */
 			BST_iterator	&operator++()
 			{
+				// std::cout << "appel ++ ?\n";
 				// peut etre necessaire securiser avec if !NULL
-				if (_node->right) // si fils droite
+				std::cout << "ANNOUCING\n";
+				std::cout << "node addr : " << &_node << "\n";
+				std::cout << "node key : " << _node->value.first << "\n";
+				std::cout << "node parent addr : " << &_node->parent << "\n";
+				std::cout << "node parent comp addr : " << &_node->parent->value << "\n"; // addresse fautive = addresse parent qui contient rien
+				std::cout << "node right addr : " << &_node->right << "\n";
+				std::cout << "node left addr : " << &_node->left << "\n";
+				std::cout << "node right comp addr : " << &_node->right->value << "\n";
+				std::cout << "node left comp addr : " << &_node->left->value << "\n";
+
+				std::cout << "node Pright addr : " << &_node->parent->right << "\n";
+				std::cout << "node Pleft addr : " << &_node->parent->left << "\n";
+				// std::cout << "node parent key : " << _node->parent->value.first << "\n";
+				if (_node != NULL)
 				{
-					_node = _node->right; // je vais a droite
-					while (_node->left) // puis je vais trouver la valeur la plus a gauche
-						_node = _node->left;
-				}
-				else
-				{
-					while (_node->parent && _node->parent->right == _node) // si ptr de droite est celui de depart => on est remonté de 1 // puis recheck
-						_node = _node->parent;
-					_node = _node->parent; // j'actualise toujours sur node parent pr cas ou on remonte de la gauche
+					if (_node->right) // si fils droite
+					{
+						_node = _node->right; // je vais a droite
+						while (_node->left) // puis je vais trouver la valeur la plus a gauche
+							_node = _node->left;
+					}
+					else if (_node->parent)
+					{
+						while (_node->parent && _node->parent->right == _node) // si ptr de droite est celui de depart => on est remonté de 1 // puis recheck
+							_node = _node->parent;
+						_node = _node->parent; // j'actualise toujours sur node parent pr cas ou on remonte de la gauche
+					}
+					else
+						_node = _node->right;
 				}
 				return ( *this );
 			}
