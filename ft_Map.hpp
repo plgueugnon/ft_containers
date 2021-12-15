@@ -56,9 +56,11 @@ namespace ft
 				typename ft::enable_if<!ft::is_integral<InputIterator>::value, void **>::type = nullptr )
 				: _tree(comp), _comp(comp), _alloc(a), _size(0)
 			{
+				std::cout << "MAP RANGE construct\n";
 				// _tree = ft::BST<value_type, key_compare>(comp);
-				for(; first != last; ++first)
-					insert(*first);
+				_tree.insert(first, last);
+				// for(; first != last; ++first)
+				// 	insert(*first);
 			}
 
 
@@ -96,6 +98,7 @@ namespace ft
 			T& operator[](const key_type& x)
 			{
 				// return ( (*((this->insert(ft::make_pair(x, mapped_type()))).first)).second );
+				std::cout << "MAP operator[]\n";
 				iterator it = find(x);
 				if (it == end())
 					it = insert(ft::make_pair(x, T())).first;
@@ -105,6 +108,7 @@ namespace ft
 			// modifiers:
 			ft::pair<iterator, bool>	insert(const value_type& x)
 			{
+				std::cout << "MAP insert 1\n";
 				ft::pair<iterator, bool> res =_tree.insert(x);
 				if (res.second == true)// si value a bien été trouvée 
 					_size++; // alors j'ai ajouté un node

@@ -68,6 +68,7 @@ namespace ft
 			/* copy constructor */
 			BST(const BST& x) : _root(nullptr), _comp(x._comp)
 			{
+				std::cout << "BST RANGE construct\n";
 				// idem - voir si besoin de faire un alloc pour init le tree ou si peut fonctionner sans
 				insert(x.begin(), x.end());
 			}
@@ -84,6 +85,7 @@ namespace ft
 			/* insert */
 			iterator insert(iterator position, const value_type &v)
 			{
+				std::cout << "BST insert1\n";
 				(void)position;
 				return ( _node_insert(_root , v) ); // a verif mais en principe suffit
 			}
@@ -92,12 +94,14 @@ namespace ft
 			void	insert(InputIterator first, InputIterator last, 
 					typename ft::enable_if<!ft::is_integral<InputIterator>::value, void **>::type = nullptr)
 			{
+				std::cout << "BST insert2 (RANGE)\n";
 				for (; first != last; ++first)
-					_node_insert(_root, *first);
+					_node_insert(_root, first->value.first);
 			}
 
 			ft::pair<iterator, bool> insert(const value_type &v)
 			{
+				std::cout << "BST insert3\n";
 				return ( _node_insert(_root, v) );
 			}
 
@@ -116,22 +120,36 @@ namespace ft
 
 			node_pointer	LeftMost() const
 			{
+				std::cout << "BST Leftmost\n";
 				node_pointer iter = _root;
-				while (iter && iter->left != NULL)
+				// while (iter && iter->left != NULL)
+				while (iter)
 					iter = iter->left;
 				return ( iter );
 			}
 
 			node_pointer	RightMost() const
 			{
+				std::cout << "BST Rightmost\n";
 				node_pointer iter = _root;
-				while (iter && iter->right != NULL)
+				// while (iter && iter->right != NULL)
+				while (iter)
 					iter = iter->right;
 				return ( iter );
 			}
 
 			void	clear() { _destroy(_root); }
 
+			// size_type	count(const key_type &k) const
+			// {
+			// 	size_type n = 0;
+			// 	for(const_iterator it = begin(); it != end(); it++)
+			// 	{
+			// 		if (k == it->first)
+			// 			n++
+			// 	}
+			// 	return ( n );
+			// }
 
 			iterator	begin() 
 			{
@@ -167,24 +185,36 @@ namespace ft
 			node_pointer	_searchNode(node_pointer node, const key_type &k)
 			{
 				node_pointer res = node;
-				if (res == NULL)
-					return res;
-				else
+				// if (res == NULL)
+				// 	return res;
+				// else
+				// {
+				// 	if (res->value.first == k)
+				// 		return ( res );
+				// 	if (k < res->value.first)
+				// 		return _searchNode(res->left, k);
+				// 	else
+				// 		return _searchNode(res->right, k);
+
+				while ( res ) // res != NULL
 				{
-					if (res->value.first == k)
-						return res;
-					else if (k < res->value.first)
-						return _searchNode(res->left, k);
+					if ( res->value.first == k ) // si cle trouvee
+						return ( res );
+					else if (k < res->value.first) // sinon avance droite ou gauche
+						res = res->left;
 					else
-						return _searchNode(res->right, k);
+						res = res->right;
 				}
+				return ( RightMost() ); // si trouve pas => renvoie end()
 			}
 
 			ft::pair<iterator, bool>	_node_insert(node_pointer node, const value_type &k)
 			{
-				node_pointer	iter;
+				std::cout << "BST node insert\n";
+				node_pointer	iter = NULL;
 				while (node) // je cherche la node
 				{
+					std::cout << "BST node insert check 1\n";
 					iter = node; // prend addresse root / pt depart insertion
 					if ( k.first < node->value.first )
 						node = node->left;
@@ -197,6 +227,7 @@ namespace ft
 				_node_alloc.construct(node, node_type(k)); // je construit une node avec la clé valeur passée en arg
 				if (iter) // if iter != NULL
 				{
+					std::cout << "BST node insert check 2\n";
 					if ( k.first < iter->value.first ) // si inf => fils gauche
 						iter->left = node;
 					else
@@ -237,7 +268,7 @@ namespace ft
 
 
 
-			// size_type	count();
+			
 			// iterator	lower_bounds();
 			// const_iterator	lower_bounds();
 			// iterator	upper_bound();
