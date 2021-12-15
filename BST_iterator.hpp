@@ -54,18 +54,18 @@ namespace ft
 			{
 				// std::cout << "appel ++ ?\n";
 				// peut etre necessaire securiser avec if !NULL
-				std::cout << "ANNOUCING\n";
-				std::cout << "node addr : " << &_node << "\n";
-				std::cout << "node key : " << _node->value.first << "\n";
-				std::cout << "node parent addr : " << &_node->parent << "\n";
-				std::cout << "node parent comp addr : " << &_node->parent->value << "\n"; // addresse fautive = addresse parent qui contient rien
-				std::cout << "node right addr : " << &_node->right << "\n";
-				std::cout << "node left addr : " << &_node->left << "\n";
-				std::cout << "node right comp addr : " << &_node->right->value << "\n";
-				std::cout << "node left comp addr : " << &_node->left->value << "\n";
+				// std::cout << "ANNOUCING\n";
+				// std::cout << "node addr : " << &_node << "\n";
+				// std::cout << "node key : " << _node->value.first << "\n";
+				// std::cout << "node parent addr : " << &_node->parent << "\n";
+				// std::cout << "node parent comp addr : " << &_node->parent->value << "\n"; // addresse fautive = addresse parent qui contient rien
+				// std::cout << "node right addr : " << &_node->right << "\n";
+				// std::cout << "node left addr : " << &_node->left << "\n";
+				// std::cout << "node right comp addr : " << &_node->right->value << "\n";
+				// std::cout << "node left comp addr : " << &_node->left->value << "\n";
 
-				std::cout << "node Pright addr : " << &_node->parent->right << "\n";
-				std::cout << "node Pleft addr : " << &_node->parent->left << "\n";
+				// std::cout << "node Pright addr : " << &_node->parent->right << "\n";
+				// std::cout << "node Pleft addr : " << &_node->parent->left << "\n";
 				// std::cout << "node parent key : " << _node->parent->value.first << "\n";
 				if (_node != NULL)
 				{
@@ -176,9 +176,19 @@ namespace ft
 					_node = _node->right; // je vais a droite
 					while (_node->left) // puis je vais trouver la valeur la plus a gauche
 						_node = _node->left;
+					// if (!_node->left)
+					// 	_node = _node->left;
 				}
 				else
 				{
+					// node_ptr parent = _node->parent;
+					// while(_node == parent->right)
+					// {
+					// 	_node = parent;
+					// 	parent = _node->parent;
+					// }
+					// if (_node->right != parent)
+					// 	_node = parent;
 					while (_node->parent && _node->parent->right == _node) // si ptr de droite est celui de depart => on est remonté de 1 // puis recheck
 						_node = _node->parent;
 					_node = _node->parent; // j'actualise toujours sur node parent pr cas ou on remonte de la gauche

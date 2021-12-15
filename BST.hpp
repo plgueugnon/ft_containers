@@ -49,7 +49,7 @@ namespace ft
 
 		private:
 			node_pointer		_root; // ptr sur node // sert de point depart depuis le haut de l'arbre pour chaque operation
-			node_pointer		_nil; // a voir si utile
+			node_pointer		_end; // a voir si utile
 			size_type			_size;
 			node_allocator		_node_alloc;
 			key_compare			_comp;
@@ -64,6 +64,7 @@ namespace ft
 				// a voir si obligatoire de allocate un node null pour que marche
 				_root = nullptr; // init la root sur NULL car arbre vide / avec 1 seule node
 				_comp = c; // stocke la premiere valeur clé
+				_end = _node_alloc.allocate(1);
 			} 
 
 			/* copy constructor */
@@ -71,6 +72,7 @@ namespace ft
 			{
 				// std::cout << "BST RANGE construct\n";
 				// idem - voir si besoin de faire un alloc pour init le tree ou si peut fonctionner sans
+				_end = _node_alloc.allocate(1);
 				insert(x.begin(), x.end());
 			}
 			/* assignment operator */
@@ -81,7 +83,11 @@ namespace ft
 				return ( *this );
 			}
 			/* destructor */
-			virtual ~BST() { clear(); } // pe a mettre en virtuel si pb lors heritage
+			virtual ~BST() 
+			{
+				clear();
+				_node_alloc.deallocate(_end, 1);
+			} // pe a mettre en virtuel si pb lors heritage
 
 			/* insert */
 			iterator insert(iterator position, const value_type &v)
@@ -104,11 +110,11 @@ namespace ft
 				// std::cout << "check second " << last->second << " + " << last->first << '\n';
 				// std::cout << first->first << "\n";
 				// std::cout << "addr parent " << first
-				for (; first != last; first++)
+				for (; first != last; ++first)
 				{
-					std::cout << "sending with address: " << &first << '\n';
-					std::cout << "sending with address: " << &(*first) << '\n';
-					std::cout << "sending : " << first->first << '\n';
+					// std::cout << "sending with address: " << &first << '\n';
+					// std::cout << "sending with address: " << &(*first) << '\n';
+					// std::cout << "sending : " << first->first << '\n';
 					_node_insert(_root, *first);
 				}
 				_node_insert(_root, *first); // RUSTINE A PB ++ !!
@@ -153,7 +159,8 @@ namespace ft
 				// while (iter && iter->right != NULL)
 				if (iter)
 				{
-					while (iter->right != NULL)
+					// while (iter->right != NULL)
+					while (iter->right)
 						iter = iter->right;
 				}
 				return ( iter );
@@ -226,6 +233,21 @@ namespace ft
 				// 	else
 				// 		return _searchNode(res->right, k);
 
+				// node_pointer res = NULL;
+				// if (node)
+				// {
+				// 	if (node->value.first == k)
+				// 		return ( node );
+				// 	if (node->left)
+				// 		res = _searchNode(node->left, k);
+				// 	if (node->right && res == NULL)
+				// 		res = _searchNode(node->right, k);
+				// }
+				// return ( res );
+
+
+
+
 				while ( res ) // res != NULL
 				{
 					if ( res->value.first == k ) // si cle trouvee
@@ -279,6 +301,9 @@ namespace ft
 					else
 						parent->right = current;
 					current->parent = parent;
+					// node_pointer actu = RightMost();
+					// actu->right = _end;
+					// _end->parent = actu;
 					return ( ft::pair<iterator, bool>(iterator(current), true) );
 				}
 
