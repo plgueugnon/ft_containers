@@ -75,14 +75,14 @@ namespace ft
 						while (_node->left) // puis je vais trouver la valeur la plus a gauche
 							_node = _node->left;
 					}
-					else if (_node->parent)
+					else// if (_node->parent)
 					{
 						while (_node->parent && _node->parent->right == _node) // si ptr de droite est celui de depart => on est remonté de 1 // puis recheck
 							_node = _node->parent;
 						_node = _node->parent; // j'actualise toujours sur node parent pr cas ou on remonte de la gauche
 					}
-					else
-						_node = _node->right;
+					// else
+					// 	_node = _node->left;
 				}
 				return ( *this );
 			}

@@ -99,8 +99,8 @@ int main()
 {
 	ft::map<char,int> first;
 
-	first['a']=10; // si ordre des clés pas ordonnés => crash lors range copy car pas rééquilibrage
 	first['b']=30;
+	first['a']=10; // si ordre des clés pas ordonnés => crash lors range copy car pas rééquilibrage
 	first['c']=50;
 	first['d']=70;
 
@@ -151,6 +151,11 @@ int main()
 	std::cout << "\nHAHA\n";
 //	 std::cout << "map1 = "; print_map(map1);
  
+	// std::cout << "elements in map1:" << '\n';
+	// std::cout << "something => " << map1.find('something')->second << '\n';
+	// std::cout << "anything => " << map1.find('anything')->second << '\n';
+	// std::cout << "that thing => " << map1.find('that thing')->second << '\n';
+
  	std::cout << "max value = " << map1.end()->first << '\n';
 	// (2) Range constructor
 	ft::map<std::string, int> iter(map1.find("anything"), map1.end());

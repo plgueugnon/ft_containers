@@ -238,43 +238,125 @@ namespace ft
 				return ( RightMost() ); // si trouve pas => renvoie end()
 			}
 
+	// // on va trouver le point d'insertion correct
+	// if (!n)
+	// 	return newNode(key);
+	// if (key < n->key)
+	// 	n->left = insertNode(n->left, key);
+	// else if (key > n->key)
+	// 	n->right = insertNode(n->right, key);
+	// else
+	// 	return n;
+
+
 			ft::pair<iterator, bool>	_node_insert(node_pointer node, const value_type &k)
 			{
-				std::cout << "BST node insert\n";
-				std::cout << "inserting : " << k.first << " + " << k.second << '\n';
-				node_pointer	iter = NULL;
-				while (node) // je cherche la node
+				// node_pointer newnode = NULL;
+				if (_root == NULL)
 				{
-					std::cout << "BST node insert check 1\n";
-					iter = node; // prend addresse root / pt depart insertion
-					std::cout << "1 " << k.first << "\n";
-					std::cout << "2 " << &node->value << "\n";
-					std::cout << "3 " << node->value.first << " + " << node->value.second << "\n";
-					if ( k.first < node->value.first )
-						node = node->left;
-					else if (k.first > node->value.first)
-						node = node->right;
-					else
-						return ( ft::pair<iterator, bool>(iterator(node), false) ); // renvoie un iterateur sur la position dans l'arbre avec faux car key deja existant
-				} //si node pas trouvée = revient a dire node == NULL
-				node = _node_alloc.allocate(1);
-
-				_node_alloc.construct(node, node_type(k)); // je construit une node avec la clé valeur passée en arg
-				node->parent = nullptr;
-				node->left = nullptr;
-				node->right = nullptr;
-				if (iter) // if iter != NULL
-				{
-					std::cout << "BST node insert check 2\n";
-					if ( k.first < iter->value.first ) // si inf => fils gauche
-						iter->left = node;
-					else
-						iter->right = node; // sinon fils droite
+					_root = _node_alloc.allocate(1);
+					_node_alloc.construct(_root, node_type(k));
+					return ( ft::pair<iterator, bool>(iterator(_root), true) );
 				}
 				else
-					_root = node;// si aucune node existe => root prend adresse
-				std::cout << "checking root value = " << _root->value.first << '\n';
-				return ( ft::pair<iterator, bool>(iterator(node), true) ); // renvoie iterator true si nouvelle node créée
+				{
+					node_pointer current = node;
+					node_pointer parent = NULL;
+					while (current)
+					{
+						parent = current;
+						if ( k.first < current->value.first )
+							current = current->left;
+						else if (k.first > current->value.first)
+							current = current->right;
+						else
+							return ( ft::pair<iterator, bool>(iterator(current), false) );
+					}
+					current = _node_alloc.allocate(1);
+					_node_alloc.construct(current, node_type(k));
+					if ( k.first < parent->value.first ) // si inf => fils gauche
+						parent->left = current;
+					else
+						parent->right = current;
+					current->parent = parent;
+					return ( ft::pair<iterator, bool>(iterator(current), true) );
+				}
+
+
+
+
+				// if (!_root) // si pas root => d'abord on créé root
+				// {
+				// 	std::cout << "check 1\n";
+				// 	node = _node_alloc.allocate(1);
+				// 	node->parent = nullptr;
+				// 	node->left = nullptr;
+				// 	node->right = nullptr;
+				// 	_node_alloc.construct(node, node_type(k));
+				// 	_root = node; // _root devient première node
+				// 	return ( ft::pair<iterator, bool>(iterator(node), true) );
+				// }
+
+				// node_pointer	iter = _searchNode(node, k.first); // va chercher depuis root la valeur k
+				// if (iter != RightMost()) // j'ai trouvé le ptr => renvoie addresse
+				// 	return ( ft::pair<iterator, bool>(iterator(iter), false) );
+				// else // pas de node existante
+				// {
+				// 	std::cout << "check 2\n";
+				// 	node_pointer iter2 = _root;
+				// 	while (iter2)
+				// 	{
+				// 		if ( k.first < iter2->value.first )
+				// 			iter2 = iter2->left;
+				// 		else if (k.first > iter2->value.first)
+				// 			iter2 = iter2->right;
+				// 	}
+				// 	node_pointer tmp = NULL;
+				// 	tmp = _node_alloc.allocate(1);
+				// 	node->left = nullptr;
+				// 	node->right = nullptr;
+				// 	_node_alloc.construct(tmp, node_type(k));
+				// 	if ( k.first < iter2->value.first ) // si inf => fils gauche
+				// 		iter2->left = tmp;
+				// 	else
+				// 		iter2->right = tmp;
+				// 	return ( ft::pair<iterator, bool>(iterator(tmp), true) );
+				// }
+				// return ( ft::pair<iterator, bool>(iterator(_root), false) );
+
+				// std::cout << "BST node insert\n";
+				// std::cout << "inserting : " << k.first << " + " << k.second << '\n';
+				// node_pointer	iter = NULL;
+				// while (node) // je cherche la node
+				// {
+				// 	std::cout << "BST node insert check 1\n";
+				// 	iter = node; // prend addresse root / pt depart insertion
+				// 	std::cout << "1 key :" << k.first << "\n";
+				// 	std::cout << "2 value addr : " << &node->value << "\n";
+				// 	std::cout << "3 node content : " << node->value.first << " + " << node->value.second << "\n";
+				// 	if ( k.first < node->value.first )
+				// 		node = node->left;
+				// 	else if (k.first > node->value.first)
+				// 		node = node->right;
+				// 	else
+				// 		return ( ft::pair<iterator, bool>(iterator(node), false) ); // renvoie un iterateur sur la position dans l'arbre avec faux car key deja existant
+				// } //si node pas trouvée = revient a dire node == NULL
+				// node = _node_alloc.allocate(1);
+
+				// _node_alloc.construct(node, node_type(k)); // je construit une node avec la clé valeur passée en arg
+
+				// if (iter) // if iter != NULL
+				// {
+				// 	std::cout << "BST node insert check 2\n";
+				// 	if ( k.first < iter->value.first ) // si inf => fils gauche
+				// 		iter->left = node;
+				// 	else
+				// 		iter->right = node; // sinon fils droite
+				// }
+				// else
+				// 	_root = node;// si aucune node existe => root prend adresse
+				// std::cout << "checking root value = " << _root->value.first << '\n';
+				// return ( ft::pair<iterator, bool>(iterator(node), true) ); // renvoie iterator true si nouvelle node créée
 			}
 
 			void	_destroy(node_pointer& root)
