@@ -91,7 +91,33 @@ namespace ft
 
 			// capacity:
 			bool	empty() const { return ( _size == 0 ); }
-			size_type	size() const { return ( _size ); }
+
+
+// size_type	count(const key_type &k) const
+// 			// {
+// 			// 	size_type n = 0;
+// 			// 	for(const_iterator it = begin(); it != end(); it++)
+// 			// 	{
+// 			// 		if (k == it->first)
+// 			// 			n++
+// 			// 	}
+// 			// 	return ( n );
+// 			// }
+
+			size_type	size() const
+			{
+				return ( _tree.size() );
+			}
+
+			// size_type	size() const 
+			// {
+			// 	size_type n = 0;
+			// 	for(const_iterator it = begin(); it != end(); it++)
+			// 		n++;
+			// 	 return ( _size );
+			// }
+
+
 			size_type	max_size() const { return ( _tree.max_size() ); }
 
 			// // 23.3.1.2 element access:

@@ -64,7 +64,9 @@ namespace ft
 				// a voir si obligatoire de allocate un node null pour que marche
 				_root = nullptr; // init la root sur NULL car arbre vide / avec 1 seule node
 				_comp = c; // stocke la premiere valeur clé
-				_end = _node_alloc.allocate(1);
+				_size = 0;
+				// _end = _node_alloc.allocate(1);
+				// _node_alloc.construct(_end, node_type(ft::pair<0, 0>));
 			} 
 
 			/* copy constructor */
@@ -72,7 +74,9 @@ namespace ft
 			{
 				// std::cout << "BST RANGE construct\n";
 				// idem - voir si besoin de faire un alloc pour init le tree ou si peut fonctionner sans
-				_end = _node_alloc.allocate(1);
+				// _end = _node_alloc.allocate(1);
+				// _node_alloc.construct(_end, node_type(ft::pair<0, 0>));
+				_size = 0;
 				insert(x.begin(), x.end());
 			}
 			/* assignment operator */
@@ -86,7 +90,8 @@ namespace ft
 			virtual ~BST() 
 			{
 				clear();
-				_node_alloc.deallocate(_end, 1);
+				// _node_alloc.destroy(_end);
+				// _node_alloc.deallocate(_end, 1);
 			} // pe a mettre en virtuel si pb lors heritage
 
 			/* insert */
@@ -117,7 +122,7 @@ namespace ft
 					// std::cout << "sending : " << first->first << '\n';
 					_node_insert(_root, *first);
 				}
-				_node_insert(_root, *first); // RUSTINE A PB ++ !!
+				// _node_insert(_root, *first); // RUSTINE A PB ++ !!
 			}
 
 			ft::pair<iterator, bool> insert(const value_type &v)
@@ -137,6 +142,7 @@ namespace ft
 				return ( _searchNode(_root, k) );
 			}
 
+			size_type	size() const { return ( _size ); }
 			size_type	max_size() const { return ( _node_alloc.max_size() ); }
 
 			node_pointer	LeftMost() const
@@ -160,13 +166,17 @@ namespace ft
 				if (iter)
 				{
 					// while (iter->right != NULL)
-					while (iter->right)
+					while (iter->right )
 						iter = iter->right;
 				}
 				return ( iter );
 			}
 
-			void	clear() { _destroy(_root); }
+			void	clear() 
+			{
+				_destroy(_root);
+				_size = 0;
+			}
 
 			// size_type	count(const key_type &k) const
 			// {
@@ -189,19 +199,21 @@ namespace ft
 			}
 			iterator	end() 
 			{
-				return ( iterator(RightMost()) );
+				// node_pointer past_end = RightMost();
+				return ( iterator(NULL, RightMost()) );
 			}
 			const_iterator	end() const
 			{
-				return ( const_iterator(RightMost()) );
+				// node_pointer past_end = RightMost();
+				return ( const_iterator(NULL, RightMost()) );
 			}
-			reverse_iterator	rbegin() 
+			reverse_iterator	rbegin()
 			{
-				return ( reverse_iterator(RightMost(), NULL) );
+				return ( reverse_iterator(end()) );
 			}
 			const_reverse_iterator	rbegin() const
 			{
-				return ( const_reverse_iterator(RightMost(), NULL) );
+				return ( const_reverse_iterator(end()) );
 			}
 			reverse_iterator	rend() { return ( reverse_iterator(LeftMost(), NULL) ); }
 			const_reverse_iterator	rend() const { return ( const_reverse_iterator(LeftMost(), NULL) ); }
@@ -257,19 +269,10 @@ namespace ft
 					else
 						res = res->right;
 				}
-				return ( RightMost() ); // si trouve pas => renvoie end()
+				// node_pointer past_end = RightMost();
+				return ( NULL );
+				// return ( RightMost() ); // si trouve pas => renvoie end()
 			}
-
-	// // on va trouver le point d'insertion correct
-	// if (!n)
-	// 	return newNode(key);
-	// if (key < n->key)
-	// 	n->left = insertNode(n->left, key);
-	// else if (key > n->key)
-	// 	n->right = insertNode(n->right, key);
-	// else
-	// 	return n;
-
 
 			ft::pair<iterator, bool>	_node_insert(node_pointer node, const value_type &k)
 			{
@@ -278,6 +281,7 @@ namespace ft
 				{
 					_root = _node_alloc.allocate(1);
 					_node_alloc.construct(_root, node_type(k));
+					_size++;
 					return ( ft::pair<iterator, bool>(iterator(_root), true) );
 				}
 				else
@@ -296,6 +300,7 @@ namespace ft
 					}
 					current = _node_alloc.allocate(1);
 					_node_alloc.construct(current, node_type(k));
+					_size++;
 					if ( k.first < parent->value.first ) // si inf => fils gauche
 						parent->left = current;
 					else
@@ -306,48 +311,6 @@ namespace ft
 					// _end->parent = actu;
 					return ( ft::pair<iterator, bool>(iterator(current), true) );
 				}
-
-
-
-
-				// if (!_root) // si pas root => d'abord on créé root
-				// {
-				// 	std::cout << "check 1\n";
-				// 	node = _node_alloc.allocate(1);
-				// 	node->parent = nullptr;
-				// 	node->left = nullptr;
-				// 	node->right = nullptr;
-				// 	_node_alloc.construct(node, node_type(k));
-				// 	_root = node; // _root devient première node
-				// 	return ( ft::pair<iterator, bool>(iterator(node), true) );
-				// }
-
-				// node_pointer	iter = _searchNode(node, k.first); // va chercher depuis root la valeur k
-				// if (iter != RightMost()) // j'ai trouvé le ptr => renvoie addresse
-				// 	return ( ft::pair<iterator, bool>(iterator(iter), false) );
-				// else // pas de node existante
-				// {
-				// 	std::cout << "check 2\n";
-				// 	node_pointer iter2 = _root;
-				// 	while (iter2)
-				// 	{
-				// 		if ( k.first < iter2->value.first )
-				// 			iter2 = iter2->left;
-				// 		else if (k.first > iter2->value.first)
-				// 			iter2 = iter2->right;
-				// 	}
-				// 	node_pointer tmp = NULL;
-				// 	tmp = _node_alloc.allocate(1);
-				// 	node->left = nullptr;
-				// 	node->right = nullptr;
-				// 	_node_alloc.construct(tmp, node_type(k));
-				// 	if ( k.first < iter2->value.first ) // si inf => fils gauche
-				// 		iter2->left = tmp;
-				// 	else
-				// 		iter2->right = tmp;
-				// 	return ( ft::pair<iterator, bool>(iterator(tmp), true) );
-				// }
-				// return ( ft::pair<iterator, bool>(iterator(_root), false) );
 
 				// std::cout << "BST node insert\n";
 				// std::cout << "inserting : " << k.first << " + " << k.second << '\n';

@@ -5,6 +5,7 @@
 #include <string>
 #include <iterator>
 
+#include <list>
 
 //#include "./containers_test/srcs/map/common.hpp"
 
@@ -14,6 +15,11 @@ struct classcomp {
 	bool operator() (const char& lhs, const char& rhs) const
 	{return lhs<rhs;}
 };
+
+
+// #define T1 int
+// #define T2 int
+// typedef _pair<const T1, T2> T3;
 
 // template<typename Map>
 // void print_map(Map& m)
@@ -133,7 +139,7 @@ int main()
 	// std::cout << "z => " << first.find('z')->second << '\n'; // map envoie valeur au pif
 
 	std::cout << "min value = " << first.begin()->second << '\n';
-	std::cout << "max value = " << first.end()->second << '\n';
+	// std::cout << "max value = " << first.end()->second << '\n';
 
 	std::cout << "\n..END FIRST..\n";
 
@@ -181,7 +187,7 @@ int main()
 	// std::cout << "anything => " << map1.find('anything')->second << '\n';
 	// std::cout << "that thing => " << map1.find('that thing')->second << '\n';
 
- 	std::cout << "max value = " << map1.end()->first << '\n';
+ 	// std::cout << "max value = " << map1.end()->first << '\n';
 	// (2) Range constructor
 	ft::map<std::string, int> iter(map1.find("anything"), map1.end());
 	ft::map<std::string, int>::iterator it = iter.begin();
@@ -197,6 +203,40 @@ int main()
 //	 std::cout << "map1 = "; print_map(map1);
 
 }
+
+// {
+// 	std::list<T3> lst;
+// 	unsigned int lst_size = 7;
+// 	for (unsigned int i = 0; i < lst_size; ++i)
+// 		lst.push_back(T3(lst_size - i, i));
+
+// 	TESTED_NAMESPACE::map<T1, T2> mp(lst.begin(), lst.end());
+// 	TESTED_NAMESPACE::map<T1, T2>::iterator it = mp.begin(), ite = mp.end();
+
+// 	TESTED_NAMESPACE::map<T1, T2> mp_range(it, --(--ite));
+// 	for (int i = 0; it != ite; ++it)
+// 		it->second = ++i * 5;
+
+// 	it = mp.begin(); ite = --(--mp.end());
+// 	TESTED_NAMESPACE::map<T1, T2> mp_copy(mp);
+// 	for (int i = 0; it != ite; ++it)
+// 		it->second = ++i * 7;
+
+// 	std::cout << "\t-- PART ONE --" << std::endl;
+// 	printSize(mp);
+// 	printSize(mp_range);
+// 	printSize(mp_copy);
+
+// 	mp = mp_copy;
+// 	mp_copy = mp_range;
+// 	mp_range.clear();
+
+// 	std::cout << "\t-- PART TWO --" << std::endl;
+// 	printSize(mp);
+// 	printSize(mp_range);
+// 	printSize(mp_copy);
+// }
+
 
 	return 0;
 }

@@ -22,11 +22,13 @@ namespace ft
 
 		private:
 			node_ptr	_node;
+			node_ptr	_parent;
 
 		public:
 			/* default constructor */
 			BST_iterator() : _node(nullptr) {}
 			BST_iterator(node_ptr node) : _node(node) {}
+			BST_iterator(node_ptr node, node_ptr parent) : _node(node), _parent(parent) {}
 			/* copy constructor */
 			BST_iterator(const BST_iterator &src) : _node(src._node) {}
 			/* assignment operator */
@@ -34,6 +36,7 @@ namespace ft
 			{
 				if (*this != rhs)
 					_node = rhs._node;
+					_parent = rhs._parent;
 				return ( *this );
 			}
 
@@ -97,18 +100,24 @@ namespace ft
 			/* used to go to next value down in the tree */
 			BST_iterator	&operator--()
 			{
-				if (_node->left)
+				if (_node != NULL)
 				{
-					_node = _node->left;
-					while (_node->right)
-						_node = _node->right;
+					_parent = _node;
+					if (_node->left)
+					{
+						_node = _node->left;
+						// while (_node->right)
+						// 	_node = _node->right;
+					}
+					else
+					{
+						while (_node->parent && _node->parent->left == _node)
+							_node = _node->parent;
+						_node = _node->parent;
+					}
 				}
 				else
-				{
-					while (_node->parent && _node->parent->left == _node)
-						_node = _node->parent;
-					_node = _node->parent;
-				}
+					_node = _parent;
 				return ( *this );
 			}
 
@@ -140,11 +149,13 @@ namespace ft
 
 		private:
 			node_ptr	_node;
+			node_ptr	_parent;
 
 		public:
 			/* default constructor */
 			BST_const_iterator() : _node(nullptr) {}
 			BST_const_iterator(node_ptr node) : _node(node) {}
+			BST_const_iterator(node_ptr node, node_ptr parent) : _node(node), _parent(parent) {}
 			/* copy constructor */
 			BST_const_iterator(const BST_const_iterator &src) : _node(src._node) {}
 			/* assignment operator */
@@ -152,6 +163,7 @@ namespace ft
 			{
 				if (*this != rhs)
 					_node = rhs._node;
+					_parent = rhs._parent;
 				return ( *this );
 			}
 
@@ -206,18 +218,24 @@ namespace ft
 			/* used to go to next value down in the tree */
 			BST_const_iterator	&operator--()
 			{
-				if (_node->left)
+				if (_node != NULL)
 				{
-					_node = _node->left;
-					while (_node->right)
-						_node = _node->right;
+					_parent = _node;
+					if (_node->left)
+					{
+						_node = _node->left;
+						// while (_node->right)
+						// 	_node = _node->right;
+					}
+					else
+					{
+						while (_node->parent && _node->parent->left == _node)
+							_node = _node->parent;
+						_node = _node->parent;
+					}
 				}
 				else
-				{
-					while (_node->parent && _node->parent->left == _node)
-						_node = _node->parent;
-					_node = _node->parent;
-				}
+					_node = _parent;
 				return ( *this );
 			}
 
