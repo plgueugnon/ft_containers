@@ -241,8 +241,6 @@ namespace ft
 	};
 
 
-
-
 	// // solution de secours // essayer de revert back vers solution simple operator conversion const
 	// template<typename T>
 	// class BST_const_iterator : ft::iterator<ft::bidirectional_iterator_tag, T>

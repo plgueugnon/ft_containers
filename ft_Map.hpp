@@ -93,16 +93,7 @@ namespace ft
 			bool	empty() const { return ( size() == 0 ); }
 
 
-			size_type	count(const key_type &k) const
-			{
-				size_type n = 0;
-				for(const_iterator it = begin(); it != end(); it++)
-				{
-					if (k == it->first)
-						n++;
-				}
-				return ( n );
-			}
+
 
 			size_type	size() const
 			{
@@ -185,17 +176,74 @@ namespace ft
 			iterator find(const key_type& x) { return ( iterator( _tree.find(x)) ); }
 			const_iterator find(const key_type& x) const { return ( const_iterator( _tree.find(x)) ); }
 
-			// size_type count(const key_type& x) const;
-			// iterator lower_bound(const key_type& x);
-			// const_iterator lower_bound(const key_type& x) const;
-			// iterator upper_bound(const key_type& x);
-			// const_iterator upper_bound(const key_type& x) const;
+			size_type	count(const key_type &k) const
+			{
+				size_type n = 0;
+				for(const_iterator it = begin(); it != end(); it++)
+				{
+					if (k == it->first)
+						n++;
+				}
+				return ( n );
+			}
+
+			iterator lower_bound(const key_type& x)
+			{
+				iterator first = begin();
+				iterator last = end();
+				while (first != last)
+				{
+					if (!_comp(first->first, x))
+						break ;
+					first++;
+				}
+				return (first);
+			}
+
+			const_iterator lower_bound(const key_type& x) const
+			{
+				const_iterator first = begin();
+				const_iterator last = end();
+				while (first != last)
+				{
+					if (!_comp(first->first, x))
+						break ;
+					first++;
+				}
+				return (first);
+			}
+
+			iterator upper_bound(const key_type& x)
+			{
+				iterator first = begin();
+				iterator last = end();
+				while (first != last)
+				{
+					if (_comp(x, first->first))
+						break ;
+					first++;
+				}
+				return (first);
+			}
+
+			const_iterator upper_bound(const key_type& x) const
+			{
+				const_iterator first = begin();
+				const_iterator last = end();
+				while (first != last)
+				{
+					if (_comp(x, first->first))
+						break ;
+					first++;
+				}
+				return (first);
+			}
+
+			ft::pair<iterator,iterator>
+			equal_range(const key_type& x) { return ( ft::make_pair(lower_bound(x), upper_bound(x)) ); }
 			
-			// ft::pair<iterator,iterator>
-			// equal_range(const key_type& x);
-			
-			// ft::pair<const_iterator,const_iterator>
-			// equal_range(const key_type& x) const;
+			ft::pair<const_iterator,const_iterator>
+			equal_range(const key_type& x) const { return ( ft::make_pair(lower_bound(x), upper_bound(x)) ); }
 
 	};
 
@@ -203,11 +251,12 @@ namespace ft
 	template <typename Key, typename T, typename Compare, typename Allocator>
 	bool operator==(const map<Key, T, Compare, Allocator> &lhs, const map<Key, T, Compare, Allocator> &rhs)
 	{
+		// return ( ft::equal(lhs.begin(), lhs.end(), rhs.begin()) );
 		typename map<Key, T, Compare, Allocator>::const_iterator	it = lhs.begin();
 		typename map<Key, T, Compare, Allocator>::const_iterator	ite = lhs.end();
 		typename map<Key, T, Compare, Allocator>::const_iterator	it2 = rhs.begin();
 
-		while (it != ite && it2 != rhs.end())
+		while (it != ite && it2 != rhs.end()) // cas particulier lié a end()
 		{
 			if (it->first != it2->first || it->second != it2->second)
 				return (false);
@@ -226,20 +275,21 @@ namespace ft
 	template <typename Key, typename T, typename Compare, typename Allocator>
 	bool operator<(const map<Key, T, Compare, Allocator> &lhs, const map<Key, T, Compare, Allocator> &rhs)
 	{
-		typename map<Key, T, Compare, Allocator>::const_iterator	it = lhs.begin();
-		typename map<Key, T, Compare, Allocator>::const_iterator	ite = lhs.end();
-		typename map<Key, T, Compare, Allocator>::const_iterator	it2 = rhs.begin();
+		return ( ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end()) );
+		// typename map<Key, T, Compare, Allocator>::const_iterator	it = lhs.begin();
+		// typename map<Key, T, Compare, Allocator>::const_iterator	ite = lhs.end();
+		// typename map<Key, T, Compare, Allocator>::const_iterator	it2 = rhs.begin();
 
-		while (it != ite && it2 != rhs.end())
-		{
-			if (it->first != it2->first)
-				return (it->first < it2->first);
-			else if (it->second != it2->second)
-				return (it->second < it2->second);
-			it++;
-			it2++;
-		}
-		return (it == ite && it2 != rhs.end());
+		// while (it != ite && it2 != rhs.end())
+		// {
+		// 	if (it->first != it2->first)
+		// 		return (it->first < it2->first);
+		// 	else if (it->second != it2->second)
+		// 		return (it->second < it2->second);
+		// 	it++;
+		// 	it2++;
+		// }
+		// return (it == ite && it2 != rhs.end());
 	}
 
 	template <typename Key, typename T, typename Compare, typename Allocator>
