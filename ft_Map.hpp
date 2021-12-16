@@ -25,8 +25,8 @@ namespace ft
 			typedef ptrdiff_t													difference_type;
 			typedef typename Allocator::pointer									pointer;
 			typedef typename Allocator::const_pointer							const_pointer;
-			typedef std::reverse_iterator<iterator>								reverse_iterator;
-			typedef std::reverse_iterator<const_iterator>						const_reverse_iterator;
+			typedef ft::reverse_iterator<iterator>								reverse_iterator;
+			typedef ft::reverse_iterator<const_iterator>						const_reverse_iterator;
 
 		class value_compare : public ft::binary_function<value_type,value_type,bool>
 		{
@@ -93,16 +93,16 @@ namespace ft
 			bool	empty() const { return ( _size == 0 ); }
 
 
-// size_type	count(const key_type &k) const
-// 			// {
-// 			// 	size_type n = 0;
-// 			// 	for(const_iterator it = begin(); it != end(); it++)
-// 			// 	{
-// 			// 		if (k == it->first)
-// 			// 			n++
-// 			// 	}
-// 			// 	return ( n );
-// 			// }
+			size_type	count(const key_type &k) const
+			{
+				size_type n = 0;
+				for(const_iterator it = begin(); it != end(); it++)
+				{
+					if (k == it->first)
+						n++;
+				}
+				return ( n );
+			}
 
 			size_type	size() const
 			{
@@ -154,7 +154,7 @@ namespace ft
 			void	insert(InputIterator first, InputIterator last,
 					typename ft::enable_if<!ft::is_integral<InputIterator>::value, void **>::type = nullptr)
 			{
-				std::cout << "MAP insert 3 (RANGE)\n";
+				// std::cout << "MAP insert 3 (RANGE)\n";
 				for(; first != last; ++first)
 					insert(*first);
 			}

@@ -40,8 +40,8 @@ namespace ft
 			/* iterators */
 			typedef ft::BST_iterator<node_type>						iterator;
 			typedef ft::BST_const_iterator<node_type>				const_iterator; // erreur ici en enlevant const
-			typedef ft::reverse_iterator<iterator>			reverse_iterator;
-			typedef ft::reverse_iterator<const_iterator>	const_reverse_iterator;
+			typedef ft::reverse_iterator<iterator>				reverse_iterator;
+			typedef ft::reverse_iterator<const_iterator>		const_reverse_iterator;
 
 			typedef std::size_t								size_type;
 			typedef ptrdiff_t								difference_type;
@@ -215,8 +215,8 @@ namespace ft
 			{
 				return ( const_reverse_iterator(end()) );
 			}
-			reverse_iterator	rend() { return ( reverse_iterator(LeftMost(), NULL) ); }
-			const_reverse_iterator	rend() const { return ( const_reverse_iterator(LeftMost(), NULL) ); }
+			reverse_iterator	rend() { return ( reverse_iterator(begin()) ); }
+			const_reverse_iterator	rend() const { return ( const_reverse_iterator(begin()) ); }
 
 			node_reference	operator*() const
 			{
