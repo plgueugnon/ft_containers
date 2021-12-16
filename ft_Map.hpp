@@ -178,8 +178,8 @@ namespace ft
 			}
 
 			// // observers:
-			// key_compare key_comp() const;
-			// value_compare value_comp() const;
+			key_compare key_comp() const { return ( _comp ); }
+			value_compare value_comp() const { return ( _comp ); }
 
 			// 23.3.1.3 map operations:
 			iterator find(const key_type& x) { return ( iterator( _tree.find(x)) ); }

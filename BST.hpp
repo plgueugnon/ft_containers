@@ -229,9 +229,9 @@ namespace ft
 			}
 
 
-			// void	erase();
-			// size_type	erase();
-			// void	erase();
+			// void erase(iterator position);
+			// size_type erase(const key_type& x);
+			// void erase(iterator first, iterator last)
 
 			void	swap(BST &x)
 			{
