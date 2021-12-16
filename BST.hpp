@@ -49,7 +49,7 @@ namespace ft
 
 		private:
 			node_pointer		_root; // ptr sur node // sert de point depart depuis le haut de l'arbre pour chaque operation
-			node_pointer		_end; // a voir si utile
+			//node_pointer		_end; // a voir si utile
 			size_type			_size;
 			node_allocator		_node_alloc;
 			key_compare			_comp;
@@ -228,10 +228,24 @@ namespace ft
 				return ( &(operator*()) );
 			}
 
+
+			// void	erase();
+			// size_type	erase();
+			// void	erase();
+
+			void	swap(BST &x)
+			{
+				ft::swap(_root, x._root);
+				ft::swap(_node_alloc, x._node_alloc);
+				ft::swap(_comp, x._comp);
+				ft::swap(_size, x._size);
+			}
+
+
 		/* assist functions */
 		protected:
 
-			node_pointer	_searchNode(node_pointer node, const key_type &k)
+			node_pointer	_searchNode(node_pointer node, const key_type &k) const
 			{
 				node_pointer res = node;
 				// if (res == NULL)
@@ -369,11 +383,9 @@ namespace ft
 
 
 
-			// void	erase();
-			// size_type	erase();
-			// void	erase();
 
-			// void	swap();
+
+
 
 
 

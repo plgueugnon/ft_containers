@@ -90,7 +90,7 @@ namespace ft
 			const_reverse_iterator	rend() const { return ( (_tree.rend()) ); }
 
 			// capacity:
-			bool	empty() const { return ( _size == 0 ); }
+			bool	empty() const { return ( size() == 0 ); }
 
 
 			size_type	count(const key_type &k) const
@@ -162,7 +162,15 @@ namespace ft
 			// void erase(iterator position);
 			// size_type erase(const key_type& x);
 			// void erase(iterator first, iterator last);
-			// void swap(map<Key,T,Compare,Allocator>&);
+
+			void swap(map<Key,T,Compare,Allocator>& x)
+			{
+				_tree.swap(x._tree);
+				ft::swap(_comp, x._comp);
+				ft::swap(_alloc, x._alloc);
+				// ft::swap(_size, x._size);
+			}
+
 			void clear() 
 			{
 				_tree.clear();
