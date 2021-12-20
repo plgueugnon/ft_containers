@@ -146,13 +146,19 @@ namespace ft
 					typename ft::enable_if<!ft::is_integral<InputIterator>::value, void **>::type = nullptr)
 			{
 				// std::cout << "MAP insert 3 (RANGE)\n";
-				for(; first != last; ++first)
+				for(; first != last; first++)
 					insert(*first);
 			}
 
-			// void erase(iterator position);
-			// size_type erase(const key_type& x);
-			// void erase(iterator first, iterator last);
+			void erase(iterator position) { _tree.erase(position); }
+			size_type erase(const key_type& x) { return ( _tree.erase(x) ); }
+			void erase(iterator first, iterator last)
+			{
+				// std::cout << "checking first =" << first->first << "\n";
+				// --last;
+				// std::cout << "checking last =" << last->first << "\n";
+				_tree.erase(first, last);
+			}
 
 			void swap(map<Key,T,Compare,Allocator>& x)
 			{

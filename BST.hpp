@@ -145,10 +145,10 @@ namespace ft
 			size_type	size() const { return ( _size ); }
 			size_type	max_size() const { return ( _node_alloc.max_size() ); }
 
-			node_pointer	LeftMost() const
+			node_pointer	LeftMost(node_pointer root) const
 			{
 				// std::cout << "BST Leftmost\n";
-				node_pointer iter = _root;
+				node_pointer iter = root;
 				// while (iter && iter->left != NULL)
 				if ( iter )
 				{
@@ -158,10 +158,10 @@ namespace ft
 				return ( iter );
 			}
 
-			node_pointer	RightMost() const
+			node_pointer	RightMost(node_pointer root) const
 			{
 				// std::cout << "BST Rightmost\n";
-				node_pointer iter = _root;
+				node_pointer iter = root;
 				// while (iter && iter->right != NULL)
 				if (iter)
 				{
@@ -191,21 +191,21 @@ namespace ft
 
 			iterator	begin() 
 			{
-				return ( iterator(LeftMost()) );
+				return ( iterator(LeftMost(_root)) );
 			}
 			const_iterator begin() const 
 			{
-				return ( const_iterator(LeftMost()) );
+				return ( const_iterator(LeftMost(_root)) );
 			}
 			iterator	end() 
 			{
 				// node_pointer past_end = RightMost();
-				return ( iterator(NULL, RightMost()) );
+				return ( iterator(NULL, RightMost(_root)) );
 			}
 			const_iterator	end() const
 			{
 				// node_pointer past_end = RightMost();
-				return ( const_iterator(NULL, RightMost()) );
+				return ( const_iterator(NULL, RightMost(_root)) );
 			}
 			reverse_iterator	rbegin()
 			{
@@ -228,10 +228,183 @@ namespace ft
 				return ( &(operator*()) );
 			}
 
+	// if (key < root->key)
+	// 	root->left = deleteNode(root->left, key);
+	// else if (key > root->key)
+	// 	root->right = deleteNode(root->right, key);
+	// else
+	// {
+	// 	// si node seule ou avec 1 child => suppr et remplacer par son fils
+	// 	if (root->left == NULL)
+	// 	{
+	// 		t_node *tmp = root->right;
+	// 		delete root;
+	// 		return tmp;
+	// 	}
+	// 	else if (root->right == NULL)
+	// 	{
+	// 		t_node *tmp = root->left;
+	// 		delete root;
+	// 		return tmp;
+	// 	}
+	// 	// si node avec deux fils => va dans son fils droite, prendre le fils gauche le plus bas
+	// 	t_node * tmp = minValueNode(root->right);
+	// 	root->key = tmp->key; // la valeur de la node la plus a gauche du fils droite est copié a la place de la node a suppr
+	// 	root->right = deleteNode(root->right, tmp->key);
 
-			// void erase(iterator position);
-			// size_type erase(const key_type& x);
-			// void erase(iterator first, iterator last)
+			void erase(iterator position)
+			{
+				if (position == end() || !_size )
+					return ;
+				node_pointer del = _searchNode(_root, position->first);
+				// std::cout << del << "key: " << del->value.first << "\n";
+				// std::cout << "d parent: " << del->parent << "\n";
+				// if (del->parent)
+				// 	std::cout << "d parent: " << del->parent->value.first << "\n";
+				// std::cout << "d right: " << del->right << "\n";
+				// std::cout << "d left: " << del->right << "\n";
+				// // std::cout << "d right: " << del->right->parent << "\n";
+				// std::cout << _root << "rkey: " << _root->value.first << "\n";
+				// std::cout << "r parent: " << _root->parent << "\n";
+				// std::cout << "r parent v: " << _root->parent->value.first << "\n"; // rien
+				// std::cout << "r parent l: " << _root->parent->left << "\n";
+				// std::cout << "r parent r: " << _root->parent->right << "\n";
+				if (del->left && del->right)
+				{
+					// std::cout << "check1\n";
+					// std::cout << "l val " << del->left->value.first << '\n';
+					// std::cout << "r val " << del->right->value.first << '\n';
+					// std::cout << "r val " << del->right->right->value.first << '\n';
+					node_pointer child = LeftMost(del->right);
+					del->value = child->value;
+					// child->parent->right = child->right;
+					// std::cout << "child val " << child->value.first << '\n';
+					// std::cout << "child pval " << child->parent->right->value.first << '\n';
+					// std::cout << "child pval " << child->right->value.first << '\n';
+					if (child->right)
+					{
+						child->right->parent = del;
+						del->right = child->right;
+					}
+					else if (child->left)
+					{
+						child->left->parent = del;
+						del->left = child->left;
+					}
+					if (!child->right && !child->left)
+					{
+						if (child->parent->right == child)
+							child->parent->right = NULL;
+						else if (child->parent->left == child)
+							child->parent->left = NULL;
+					}
+					_node_alloc.destroy(child);
+					_node_alloc.deallocate(child, 1);
+					// del->right->parent =  del;
+					_size--;
+				}
+				else
+				{
+					// std::cout << "check2\n";
+					node_pointer child = (del->left != NULL) ? del->left : del->right;
+					if (child)
+					{
+						// std::cout << "child ? " << child << "\n";
+						child->parent = del->parent;
+						if (!child->parent)
+						{
+							_node_alloc.destroy(del);
+							_node_alloc.deallocate(del, 1);
+							del = child;
+							_root = child;
+							_size--;
+							return ;
+						}
+					}
+					else if (del->parent)
+					{
+						// std::cout << "check del " << del->value.first << '\n';
+						// std::cout << "check del from parent " << del->parent->left << '\n';
+						// std::cout << "check parent " << del->parent->value.first << '\n';
+						// if (del->parent->left)
+						// 	std::cout << "check del parent left " << del->parent->left->value.first << '\n';
+						
+						if (del->parent->right == del)
+							del->parent->right = NULL;
+						if (del->parent->left == del)
+							del->parent->left = NULL;
+					}
+					// else if (!child && !del->parent)
+					// 	return ;
+					if (del->left)
+					{
+						// std::cout << "check3\n";
+						if (del->parent->left == del)
+							del->parent->left = child;
+						else
+							del->parent->right = child;
+					}
+					else if (del->right)
+					{
+						// std::cout << "check4\n";
+						if (del->parent->right == del)
+							del->parent->right = child;
+						else
+							del->parent->left = child;
+					}
+					if (del == _root && !del->right && !del->left)
+					{
+						_node_alloc.destroy(del);
+						_node_alloc.deallocate(del, 1);
+						del = _root = NULL;
+						_size--;
+						return ;
+					}
+					_node_alloc.destroy(del);
+					_node_alloc.deallocate(del, 1);
+					del = NULL;
+					_size--;
+
+
+					// if (del->left == NULL)
+					// {
+					// 	node_pointer tmp = del->right;
+					// 	_node_alloc.destroy(del);
+					// 	_node_alloc.deallocate(del, 1);
+					// 	return ;
+					// }
+					// else if (del->right == NULL)
+					// {
+					// 	node_pointer tmp = del->left;
+					// 	_node_alloc.destroy(del);
+					// 	_node_alloc.deallocate(del, 1);
+					// 	return ;
+					// }
+
+				}
+			}
+			size_type erase(const key_type& x)
+			{
+				iterator it = find(x);
+				if (it != end())
+				{
+					erase(it);
+					return ( 1 );
+				}
+				return ( 0 );
+			}
+			void erase(iterator first, iterator last)
+			{
+				// for(iterator it = first; it != last; it++)
+				// 	erase(it);
+				for (; first != last;)
+				{
+					iterator tmp = first;
+					++tmp;
+					erase(first);
+					first = tmp;
+				}
+			}
 
 			void	swap(BST &x)
 			{
