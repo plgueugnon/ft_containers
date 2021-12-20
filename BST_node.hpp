@@ -18,7 +18,7 @@ namespace ft
 
 		/* default constructor */
 		BST_node() : value(), parent(nullptr), left(nullptr), right(nullptr) {}
-		/* constructor by value - giving a new value and a default color */
+		/* constructor by value - giving a new value */
 		BST_node(const T& value) : value(value)
 		{
 			parent = nullptr;
@@ -27,7 +27,7 @@ namespace ft
 		}
 		/* destructor */
 		virtual ~BST_node() {}
-		/* copy constructor */ // is_used ?
+		/* copy constructor */
 		BST_node(BST_node const &x) : value(x.value), parent(x.parent), left(x.left), right(x.right) {}
 
 		/* assignement operator */

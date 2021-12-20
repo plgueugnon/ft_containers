@@ -49,7 +49,6 @@ namespace ft
 
 		private:
 			node_pointer		_root; // ptr sur node // sert de point depart depuis le haut de l'arbre pour chaque operation
-			//node_pointer		_end; // a voir si utile
 			size_type			_size;
 			node_allocator		_node_alloc;
 			key_compare			_comp;
@@ -65,17 +64,11 @@ namespace ft
 				_root = nullptr; // init la root sur NULL car arbre vide / avec 1 seule node
 				_comp = c; // stocke la premiere valeur clé
 				_size = 0;
-				// _end = _node_alloc.allocate(1);
-				// _node_alloc.construct(_end, node_type(ft::pair<0, 0>));
 			} 
 
 			/* copy constructor */
 			BST(const BST& x) : _root(nullptr), _comp(x._comp)
 			{
-				// std::cout << "BST RANGE construct\n";
-				// idem - voir si besoin de faire un alloc pour init le tree ou si peut fonctionner sans
-				// _end = _node_alloc.allocate(1);
-				// _node_alloc.construct(_end, node_type(ft::pair<0, 0>));
 				_size = 0;
 				insert(x.begin(), x.end());
 			}
@@ -87,17 +80,11 @@ namespace ft
 				return ( *this );
 			}
 			/* destructor */
-			virtual ~BST() 
-			{
-				clear();
-				// _node_alloc.destroy(_end);
-				// _node_alloc.deallocate(_end, 1);
-			} // pe a mettre en virtuel si pb lors heritage
+			virtual ~BST() { clear(); }
 
 			/* insert */
 			iterator insert(iterator position, const value_type &v)
 			{
-				// std::cout << "BST insert1\n";
 				(void)position;
 				return ( _node_insert(_root , v) ); // a verif mais en principe suffit
 			}
@@ -106,50 +93,23 @@ namespace ft
 			void	insert(InputIterator first, InputIterator last, 
 					typename ft::enable_if<!ft::is_integral<InputIterator>::value, void **>::type = nullptr)
 			{
-				// std::cout << "BST insert2 (RANGE)\n";
-				// std::cout << &first << "\n";
-				// std::cout << &(*first) << "\n";
-				// std::cout << &last<< "\n";
-				// std::cout << &(*last) << "\n";
-				// std::cout << "check first " << first->second << " + " << first->first << '\n';
-				// std::cout << "check second " << last->second << " + " << last->first << '\n';
-				// std::cout << first->first << "\n";
-				// std::cout << "addr parent " << first
 				for (; first != last; ++first)
-				{
-					// std::cout << "sending with address: " << &first << '\n';
-					// std::cout << "sending with address: " << &(*first) << '\n';
-					// std::cout << "sending : " << first->first << '\n';
 					_node_insert(_root, *first);
-				}
-				// _node_insert(_root, *first); // RUSTINE A PB ++ !!
 			}
 
-			ft::pair<iterator, bool> insert(const value_type &v)
-			{
-				// std::cout << "BST insert3\n";
-				return ( _node_insert(_root, v) );
-			}
+			ft::pair<iterator, bool> insert(const value_type &v) { return ( _node_insert(_root, v) ); }
 
 			/* find */
-			iterator	find(const key_type &k)
-			{
-				return ( _searchNode(_root, k) );
-			}
+			iterator	find(const key_type &k) { return ( _searchNode(_root, k) ); }
+			const_iterator	find(const key_type &k) const { return ( _searchNode(_root, k) ); }
 
-			const_iterator	find(const key_type &k) const
-			{
-				return ( _searchNode(_root, k) );
-			}
-
+			/* size */
 			size_type	size() const { return ( _size ); }
 			size_type	max_size() const { return ( _node_alloc.max_size() ); }
 
 			node_pointer	LeftMost(node_pointer root) const
 			{
-				// std::cout << "BST Leftmost\n";
 				node_pointer iter = root;
-				// while (iter && iter->left != NULL)
 				if ( iter )
 				{
 					while (iter->left != NULL)
@@ -160,12 +120,9 @@ namespace ft
 
 			node_pointer	RightMost(node_pointer root) const
 			{
-				// std::cout << "BST Rightmost\n";
 				node_pointer iter = root;
-				// while (iter && iter->right != NULL)
 				if (iter)
 				{
-					// while (iter->right != NULL)
 					while (iter->right )
 						iter = iter->right;
 				}
@@ -178,120 +135,35 @@ namespace ft
 				_size = 0;
 			}
 
-			// size_type	count(const key_type &k) const
-			// {
-			// 	size_type n = 0;
-			// 	for(const_iterator it = begin(); it != end(); it++)
-			// 	{
-			// 		if (k == it->first)
-			// 			n++
-			// 	}
-			// 	return ( n );
-			// }
-
-			iterator	begin() 
-			{
-				return ( iterator(LeftMost(_root)) );
-			}
-			const_iterator begin() const 
-			{
-				return ( const_iterator(LeftMost(_root)) );
-			}
-			iterator	end() 
-			{
-				// node_pointer past_end = RightMost();
-				return ( iterator(NULL, RightMost(_root)) );
-			}
-			const_iterator	end() const
-			{
-				// node_pointer past_end = RightMost();
-				return ( const_iterator(NULL, RightMost(_root)) );
-			}
-			reverse_iterator	rbegin()
-			{
-				return ( reverse_iterator(end()) );
-			}
-			const_reverse_iterator	rbegin() const
-			{
-				return ( const_reverse_iterator(end()) );
-			}
+			iterator	begin() { return ( iterator(LeftMost(_root)) ); }
+			const_iterator begin() const { return ( const_iterator(LeftMost(_root)) ); }
+			iterator	end() { return ( iterator(NULL, RightMost(_root)) ); }
+			const_iterator	end() const { return ( const_iterator(NULL, RightMost(_root)) ); }
+			reverse_iterator	rbegin() { return ( reverse_iterator(end()) ); }
+			const_reverse_iterator	rbegin() const { return ( const_reverse_iterator(end()) ); }
 			reverse_iterator	rend() { return ( reverse_iterator(begin()) ); }
 			const_reverse_iterator	rend() const { return ( const_reverse_iterator(begin()) ); }
-
-			node_reference	operator*() const
-			{
-				return ( _root );
-			}
-
-			node_pointer	operator->() const
-			{
-				return ( &(operator*()) );
-			}
-
-	// if (key < root->key)
-	// 	root->left = deleteNode(root->left, key);
-	// else if (key > root->key)
-	// 	root->right = deleteNode(root->right, key);
-	// else
-	// {
-	// 	// si node seule ou avec 1 child => suppr et remplacer par son fils
-	// 	if (root->left == NULL)
-	// 	{
-	// 		t_node *tmp = root->right;
-	// 		delete root;
-	// 		return tmp;
-	// 	}
-	// 	else if (root->right == NULL)
-	// 	{
-	// 		t_node *tmp = root->left;
-	// 		delete root;
-	// 		return tmp;
-	// 	}
-	// 	// si node avec deux fils => va dans son fils droite, prendre le fils gauche le plus bas
-	// 	t_node * tmp = minValueNode(root->right);
-	// 	root->key = tmp->key; // la valeur de la node la plus a gauche du fils droite est copié a la place de la node a suppr
-	// 	root->right = deleteNode(root->right, tmp->key);
 
 			void erase(iterator position)
 			{
 				if (position == end() || !_size )
 					return ;
-				node_pointer del = _searchNode(_root, position->first);
-				// std::cout << del << "key: " << del->value.first << "\n";
-				// std::cout << "d parent: " << del->parent << "\n";
-				// if (del->parent)
-				// 	std::cout << "d parent: " << del->parent->value.first << "\n";
-				// std::cout << "d right: " << del->right << "\n";
-				// std::cout << "d left: " << del->right << "\n";
-				// // std::cout << "d right: " << del->right->parent << "\n";
-				// std::cout << _root << "rkey: " << _root->value.first << "\n";
-				// std::cout << "r parent: " << _root->parent << "\n";
-				// std::cout << "r parent v: " << _root->parent->value.first << "\n"; // rien
-				// std::cout << "r parent l: " << _root->parent->left << "\n";
-				// std::cout << "r parent r: " << _root->parent->right << "\n";
-				if (del->left && del->right)
+				node_pointer del = _searchNode(_root, position->first); // si position != null va chercher ptr a suppr
+				if (del->left && del->right) // si node a deux fils (case 1)
 				{
-					// std::cout << "check1\n";
-					// std::cout << "l val " << del->left->value.first << '\n';
-					// std::cout << "r val " << del->right->value.first << '\n';
-					// std::cout << "r val " << del->right->right->value.first << '\n';
-					node_pointer child = LeftMost(del->right);
-					del->value = child->value;
-					// child->parent->right = child->right;
-					// std::cout << "child val " << child->value.first << '\n';
-					// std::cout << "child pval " << child->parent->right->value.first << '\n';
-					// std::cout << "child pval " << child->right->value.first << '\n';
-					if (child->right)
+					node_pointer child = LeftMost(del->right); // va cherche le plus a gauche depuis droite
+					del->value = child->value; // copie valeur trouve dans node vise par suppr
+					if (child->right)// si fils droite de node qui va etre suppr (child)
 					{
-						child->right->parent = del;
-						del->right = child->right;
+						child->right->parent = del; // node visee par suppr (del) devient son parent
+						del->right = child->right; // actualise fils droite avec fils droite de node qui va etre suppr
 					}
 					else if (child->left)
 					{
 						child->left->parent = del;
 						del->left = child->left;
 					}
-					if (!child->right && !child->left)
+					if (!child->right && !child->left) // si aucun fils (parent seul), je set a null le ptr sur le fils qui va etre suppr (pr eviter acces lecture valeur suppr)
 					{
 						if (child->parent->right == child)
 							child->parent->right = NULL;
@@ -300,59 +172,46 @@ namespace ft
 					}
 					_node_alloc.destroy(child);
 					_node_alloc.deallocate(child, 1);
-					// del->right->parent =  del;
 					_size--;
 				}
-				else
+				else // node a un seul, ou aucun fils (case 2)
 				{
-					// std::cout << "check2\n";
-					node_pointer child = (del->left != NULL) ? del->left : del->right;
+					node_pointer child = (del->left != NULL) ? del->left : del->right; // child prend adresse fils non nul
 					if (child)
 					{
-						// std::cout << "child ? " << child << "\n";
-						child->parent = del->parent;
-						if (!child->parent)
+						child->parent = del->parent; // parent du fils devient celui node a suppr
+						if (!child->parent) // si parent null => veut dire que node a suppr == root
 						{
 							_node_alloc.destroy(del);
 							_node_alloc.deallocate(del, 1);
 							del = child;
-							_root = child;
+							_root = child; // actualise root sur fils droite ou gauche non nul
 							_size--;
 							return ;
 						}
 					}
-					else if (del->parent)
+					else if (del->parent) // si aucun fils, node va simplement etre suppr => besoin de set ptr de son parent sur null
 					{
-						// std::cout << "check del " << del->value.first << '\n';
-						// std::cout << "check del from parent " << del->parent->left << '\n';
-						// std::cout << "check parent " << del->parent->value.first << '\n';
-						// if (del->parent->left)
-						// 	std::cout << "check del parent left " << del->parent->left->value.first << '\n';
-						
 						if (del->parent->right == del)
 							del->parent->right = NULL;
 						if (del->parent->left == del)
 							del->parent->left = NULL;
 					}
-					// else if (!child && !del->parent)
-					// 	return ;
-					if (del->left)
+					if (del->left) // si fils droit != null
 					{
-						// std::cout << "check3\n";
-						if (del->parent->left == del)
+						if (del->parent->left == del) // si fils parent est del => actualise ptr sur child
 							del->parent->left = child;
 						else
 							del->parent->right = child;
 					}
 					else if (del->right)
 					{
-						// std::cout << "check4\n";
 						if (del->parent->right == del)
 							del->parent->right = child;
 						else
 							del->parent->left = child;
 					}
-					if (del == _root && !del->right && !del->left)
+					if (del == _root && !del->right && !del->left) // si il ne reste que root sur l'arbre
 					{
 						_node_alloc.destroy(del);
 						_node_alloc.deallocate(del, 1);
@@ -364,25 +223,9 @@ namespace ft
 					_node_alloc.deallocate(del, 1);
 					del = NULL;
 					_size--;
-
-
-					// if (del->left == NULL)
-					// {
-					// 	node_pointer tmp = del->right;
-					// 	_node_alloc.destroy(del);
-					// 	_node_alloc.deallocate(del, 1);
-					// 	return ;
-					// }
-					// else if (del->right == NULL)
-					// {
-					// 	node_pointer tmp = del->left;
-					// 	_node_alloc.destroy(del);
-					// 	_node_alloc.deallocate(del, 1);
-					// 	return ;
-					// }
-
 				}
 			}
+
 			size_type erase(const key_type& x)
 			{
 				iterator it = find(x);
@@ -395,12 +238,10 @@ namespace ft
 			}
 			void erase(iterator first, iterator last)
 			{
-				// for(iterator it = first; it != last; it++)
-				// 	erase(it);
 				for (; first != last;)
 				{
 					iterator tmp = first;
-					++tmp;
+					++tmp; // pour eviter increment en trop par tour
 					erase(first);
 					first = tmp;
 				}
@@ -414,39 +255,12 @@ namespace ft
 				ft::swap(_size, x._size);
 			}
 
-
 		/* assist functions */
 		protected:
 
 			node_pointer	_searchNode(node_pointer node, const key_type &k) const
 			{
 				node_pointer res = node;
-				// if (res == NULL)
-				// 	return res;
-				// else
-				// {
-				// 	if (res->value.first == k)
-				// 		return ( res );
-				// 	if (k < res->value.first)
-				// 		return _searchNode(res->left, k);
-				// 	else
-				// 		return _searchNode(res->right, k);
-
-				// node_pointer res = NULL;
-				// if (node)
-				// {
-				// 	if (node->value.first == k)
-				// 		return ( node );
-				// 	if (node->left)
-				// 		res = _searchNode(node->left, k);
-				// 	if (node->right && res == NULL)
-				// 		res = _searchNode(node->right, k);
-				// }
-				// return ( res );
-
-
-
-
 				while ( res ) // res != NULL
 				{
 					if ( res->value.first == k ) // si cle trouvee
@@ -456,15 +270,12 @@ namespace ft
 					else
 						res = res->right;
 				}
-				// node_pointer past_end = RightMost();
-				return ( NULL );
-				// return ( RightMost() ); // si trouve pas => renvoie end()
+				return ( NULL ); // si rien n'est trouvé => null
 			}
 
 			ft::pair<iterator, bool>	_node_insert(node_pointer node, const value_type &k)
 			{
-				// node_pointer newnode = NULL;
-				if (_root == NULL)
+				if (_root == NULL) // si arbre vide
 				{
 					_root = _node_alloc.allocate(1);
 					_node_alloc.construct(_root, node_type(k));
@@ -475,15 +286,15 @@ namespace ft
 				{
 					node_pointer current = node;
 					node_pointer parent = NULL;
-					while (current)
+					while (current) // je cherche la node
 					{
-						parent = current;
+						parent = current; // prend addresse root / pt depart insertion
 						if ( k.first < current->value.first )
 							current = current->left;
 						else if (k.first > current->value.first)
 							current = current->right;
 						else
-							return ( ft::pair<iterator, bool>(iterator(current), false) );
+							return ( ft::pair<iterator, bool>(iterator(current), false) ); // renvoie un iterateur sur la position dans l'arbre avec faux car key deja existant
 					}
 					current = _node_alloc.allocate(1);
 					_node_alloc.construct(current, node_type(k));
@@ -492,46 +303,9 @@ namespace ft
 						parent->left = current;
 					else
 						parent->right = current;
-					current->parent = parent;
-					// node_pointer actu = RightMost();
-					// actu->right = _end;
-					// _end->parent = actu;
-					return ( ft::pair<iterator, bool>(iterator(current), true) );
+					current->parent = parent; // set le parent
+					return ( ft::pair<iterator, bool>(iterator(current), true) ); // renvoie iterator true si nouvelle node créée
 				}
-
-				// std::cout << "BST node insert\n";
-				// std::cout << "inserting : " << k.first << " + " << k.second << '\n';
-				// node_pointer	iter = NULL;
-				// while (node) // je cherche la node
-				// {
-				// 	std::cout << "BST node insert check 1\n";
-				// 	iter = node; // prend addresse root / pt depart insertion
-				// 	std::cout << "1 key :" << k.first << "\n";
-				// 	std::cout << "2 value addr : " << &node->value << "\n";
-				// 	std::cout << "3 node content : " << node->value.first << " + " << node->value.second << "\n";
-				// 	if ( k.first < node->value.first )
-				// 		node = node->left;
-				// 	else if (k.first > node->value.first)
-				// 		node = node->right;
-				// 	else
-				// 		return ( ft::pair<iterator, bool>(iterator(node), false) ); // renvoie un iterateur sur la position dans l'arbre avec faux car key deja existant
-				// } //si node pas trouvée = revient a dire node == NULL
-				// node = _node_alloc.allocate(1);
-
-				// _node_alloc.construct(node, node_type(k)); // je construit une node avec la clé valeur passée en arg
-
-				// if (iter) // if iter != NULL
-				// {
-				// 	std::cout << "BST node insert check 2\n";
-				// 	if ( k.first < iter->value.first ) // si inf => fils gauche
-				// 		iter->left = node;
-				// 	else
-				// 		iter->right = node; // sinon fils droite
-				// }
-				// else
-				// 	_root = node;// si aucune node existe => root prend adresse
-				// std::cout << "checking root value = " << _root->value.first << '\n';
-				// return ( ft::pair<iterator, bool>(iterator(node), true) ); // renvoie iterator true si nouvelle node créée
 			}
 
 			void	_destroy(node_pointer& root)
@@ -545,35 +319,6 @@ namespace ft
 					root = nullptr;
 				}
 			}
-
-
-			/**************************************************************/ // TO DO
-
-
-
-			// bool		empty();
-			// size_type	size();
-
-
-
-
-
-
-
-
-
-			
-			// iterator	lower_bounds();
-			// const_iterator	lower_bounds();
-			// iterator	upper_bound();
-			// const_iterator	upper_bound();
-			// equal_range();
-
-			// void	rotateL();
-			// void	rotateR();
-			// node_pointer	get_root();
-
-
 	};
 
 }
