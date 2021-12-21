@@ -28,10 +28,13 @@ namespace ft
 			// typedef	ft::BST_node<const value_type>				const_node_type;
 			typedef node_type*								node_pointer; // ptr sur node
 			typedef node_type&								node_reference;
-			typedef std::allocator<node_type>				node_allocator; // allocator de node
+			// typedef std::allocator<node_type>				node_allocator; // allocator de node
+			/* revient à dire typedef std::allocator<node_type>	node_allocator; */
+			typedef typename Allocator::template rebind<node_type>::other node_allocator;
+
 
 			/* pointer & reference */
-			typedef Allocator								allocator_type;
+			// typedef Allocator								allocator_type;
 			typedef typename Allocator::reference			reference;
 			typedef typename Allocator::const_reference 	const_reference;
 			typedef typename Allocator::pointer				pointer;
