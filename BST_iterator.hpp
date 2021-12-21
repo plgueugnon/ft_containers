@@ -148,8 +148,8 @@ namespace ft
 			// template<typename const_reverse_iterator>
 			// BST_const_iterator(const const_reverse_iterator &src) : _node(src.base()), _parent(src.pbase()) {} // conversion de simple it vers const it
 
-			template<typename BST_const_iterator>
-			BST_const_iterator(const BST_const_iterator &src) : _node(src.base()), _parent(src.pbase()) {}
+			template<typename BST_iterator>
+			BST_const_iterator(const BST_iterator &src) : _node(src.base()), _parent(src.pbase()) {}
 
 			BST_const_iterator(const BST_const_iterator &src) : _node(src._node), _parent(src._parent) {}
 			/* assignment operator */
