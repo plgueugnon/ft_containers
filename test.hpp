@@ -29,6 +29,7 @@ void	compare_file(T1 filename1, T2 filename2, std::string testname)
 	std::ifstream	file2(filename2, std::ifstream::in);
 	while ( (!file1.eof()) && (!file2.eof()) )
 	{
+		// std::cout << "check2\n";
 		std::string line1, line2;
 		std::getline(file1, line1);
 		std::getline(file2, line2);
@@ -43,6 +44,15 @@ void	compare_file(T1 filename1, T2 filename2, std::string testname)
 	std::cout << testname << " : " << "[" << BOLDGREEN"√"RESET"]" << '\n';
 	file1.close();
 	file2.close();
+}
+
+template <typename T1, typename T2>
+void	remove_tests_files(T1 filename1, T2 filename2)
+{
+	if (std::remove(filename1.c_str()))
+		std::cerr << "Failure to delete file\n";
+	if (std::remove(filename2.c_str()))
+		std::cerr << "Failure to delete file\n";
 }
 
 
