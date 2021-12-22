@@ -292,9 +292,9 @@ namespace ft
 					while (current) // je cherche la node
 					{
 						parent = current; // prend addresse root / pt depart insertion
-						if ( k.first < current->value.first )
+						if ( _comp(k.first, current->value.first) ) // we use object comp here because it stands for < by default but can be inverted
 							current = current->left;
-						else if (k.first > current->value.first)
+						else if ( _comp(current->value.first, k.first) )
 							current = current->right;
 						else
 							return ( ft::pair<iterator, bool>(iterator(current), false) ); // renvoie un iterateur sur la position dans l'arbre avec faux car key deja existant
@@ -302,7 +302,7 @@ namespace ft
 					current = _node_alloc.allocate(1);
 					_node_alloc.construct(current, node_type(k));
 					_size++;
-					if ( k.first < parent->value.first ) // si inf => fils gauche
+					if ( _comp(k.first, parent->value.first) ) // si inf => fils gauche
 						parent->left = current;
 					else
 						parent->right = current;

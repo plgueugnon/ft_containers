@@ -6,7 +6,7 @@
 #    By: pgueugno <pgueugno@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/01/21 14:58:12 by pgueugno          #+#    #+#              #
-#    Updated: 2021/12/15 16:10:50 by pgueugno         ###   ########.fr        #
+#    Updated: 2021/12/22 19:24:14 by pgueugno         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -28,14 +28,14 @@ LIBFT_MAKE	=	Makefile
 #                               Sources filenames                              #
 ################################################################################
 
-SRCS		=	main_map.cpp #main_vector.cpp
+SRCS		=	main.cpp #main_map.cpp #main_vector.cpp
 
 ################################################################################
 #                              Commands and arguments                          #
 ################################################################################
 
 CXX				=	clang++
-CXXFLAGS		=	-Wall -Wextra -Werror -g3 -std=c++98 #-fsanitize=address
+CXXFLAGS		=	-Wall -Wextra -Werror -g3 -std=c++98 -fsanitize=address
 RM				=	rm -f
 
 ################################################################################
