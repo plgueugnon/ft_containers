@@ -1,3 +1,6 @@
+#ifndef __FT_MAP_TEST_H__
+#define __FT_MAP_TEST_H__
+
 #include "test.hpp"
 
 std::vector<std::string> ft_map_test( void )
@@ -526,6 +529,6 @@ std::vector<std::string> ft_map_test( void )
 
 	mymap.get_allocator().deallocate(p,5);
 }
-	std::vector<std::string> tests(testsname);
-	return ( tests );
+	return ( testsname );
 }
+#endif // __FT_MAP_TEST_H__

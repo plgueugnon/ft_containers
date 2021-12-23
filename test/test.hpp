@@ -9,6 +9,9 @@
 #include <iterator>
 #include <list>
 #include <vector>
+#include <utility>
+#include <iomanip>
+#include <deque>
 
 #include "ft_Map.hpp"
 #include "ft_Vector.hpp"
@@ -16,6 +19,10 @@
 
 #include "ft_map_test.hpp"
 #include "std_map_test.hpp"
+#include "ft_vector_test.hpp"
+#include "std_vector_test.hpp"
+#include "ft_stack_test.hpp"
+#include "std_stack_test.hpp"
 
 #define BOLDRED		"\033[1m\033[31m"
 #define BOLDGREEN	"\033[1m\033[32m"
@@ -41,7 +48,7 @@ void	compare_file(T1 filename1, T2 filename2, std::string testname)
 			return ;
 		}
 	}
-	std::cout << testname << " : " << "[" << BOLDGREEN"√"RESET"]" << '\n';
+	std::cout << std::setw(20) <<  testname << " : " << "[" << BOLDGREEN"√"RESET"]" << '\n';
 	file1.close();
 	file2.close();
 }

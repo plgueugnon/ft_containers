@@ -20,10 +20,35 @@ int	main( void )
 	ft_tests = ft_map_test();
 	limit = std_map_test();
 	ftb = ft_tests.begin();
+
 	std::cout << BOLDWHITE"TESTING FT vs STD MAP CONTAINER\n"RESET;
 	for (int i = 0; i < limit; i++)
 	{
-		std::cout << "[" << i + 1 << "]";
+		std::cout << "[" << std::setw(2) << i + 1 << "]";
+		compare_file(ftfiles[i], stdfiles[i], *(ftb++));
+	}
+	for (int i = 0; i < limit; i++)
+		remove_tests_files(ftfiles[i], stdfiles[i]);
+
+	std::cout << BOLDWHITE"\nTESTING FT vs STD VECTOR CONTAINER\n"RESET;
+	ft_tests = ft_vector_test();
+	limit = std_vector_test();
+	ftb = ft_tests.begin();
+	for (int i = 0; i < limit; i++)
+	{
+		std::cout << "[" << std::setw(2) << i + 1 << "]";
+		compare_file(ftfiles[i], stdfiles[i], *(ftb++));
+	}
+	for (int i = 0; i < limit; i++)
+		remove_tests_files(ftfiles[i], stdfiles[i]);
+
+	std::cout << BOLDWHITE"\nTESTING FT vs STD STACK CONTAINER\n"RESET;
+	ft_tests = ft_stack_test();
+	limit = std_stack_test();
+	ftb = ft_tests.begin();
+	for (int i = 0; i < limit; i++)
+	{
+		std::cout << "[" << std::setw(2) << i + 1 << "]";
 		compare_file(ftfiles[i], stdfiles[i], *(ftb++));
 	}
 	for (int i = 0; i < limit; i++)

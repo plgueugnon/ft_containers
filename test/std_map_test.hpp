@@ -1,3 +1,6 @@
+#ifndef __STD_MAP_TEST_H__
+#define __STD_MAP_TEST_H__
+
 #include "test.hpp"
 
 int std_map_test( void )
@@ -525,6 +528,6 @@ int std_map_test( void )
 
 	mymap.get_allocator().deallocate(p,5);
 }
-	std::vector<std::string> tests(testsname);
 	return ( i );
 }
+#endif // __STD_MAP_TEST_H__

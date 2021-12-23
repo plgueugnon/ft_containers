@@ -6,7 +6,7 @@
 #    By: pgueugno <pgueugno@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/01/21 14:58:12 by pgueugno          #+#    #+#              #
-#    Updated: 2021/12/22 19:24:14 by pgueugno         ###   ########.fr        #
+#    Updated: 2021/12/23 14:57:14 by pgueugno         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,21 +21,26 @@ NAME		=	program
 ################################################################################
 
 SRCS_DIR	=	.
+FT_DIR		=	srcs
 OBJS_DIR	=	objs
 LIBFT_MAKE	=	Makefile
+TESTS_DIR	=	test
 
 ################################################################################
 #                               Sources filenames                              #
 ################################################################################
 
-SRCS		=	main.cpp #main_map.cpp #main_vector.cpp
+SRCS		=	main.cpp
 
 ################################################################################
 #                              Commands and arguments                          #
 ################################################################################
 
 CXX				=	clang++
-CXXFLAGS		=	-Wall -Wextra -Werror -g3 -std=c++98 -fsanitize=address
+HEADERS			=	$(FT_DIR) $(TESTS_DIR)
+INCLUDE			=	$(HEADERS:%=-I%)
+DEBUG			=	-fsanitize=address
+CXXFLAGS		=	-Wall -Wextra -Werror -g3 -std=c++98 $(INCLUDE) $(DEBUG)
 RM				=	rm -f
 
 ################################################################################
@@ -69,7 +74,7 @@ $(OBJS_DIR)/%.o: $(SRCS_DIR)/%.cpp
 
 $(NAME):	$(OBJS)
 			@ echo "\t$(_YELLOW)[Creating program]$(_NC)"
-			$(CXX) $(OBJS) -o $(NAME) -fsanitize=address
+			$(CXX) $(OBJS) -o $(NAME) $(DEBUG)
 			@ echo "$(_GREEN)[program created & ready]$(_NC)"
 
 clean:
