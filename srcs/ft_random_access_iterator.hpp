@@ -1,7 +1,17 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_random_access_iterator.hpp                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: pgueugno <pgueugno@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/12/27 20:13:54 by pgueugno          #+#    #+#             */
+/*   Updated: 2021/12/27 20:13:54 by pgueugno         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef __FT_RANDOM_ACCESS_ITERATOR_H__
 #define __FT_RANDOM_ACCESS_ITERATOR_H__
-
-#include <iostream> // A SUPRR
 
 #include "ft_iterator.hpp"
 
@@ -10,7 +20,6 @@ namespace ft
 	template<class T>
 	class random_access_iterator : public ft::iterator<ft::random_access_iterator_tag, T>
 	{
-			// alias typedef
 	public:
 
 		typedef T																			iterator_type;
@@ -24,14 +33,17 @@ namespace ft
 		pointer _ptr;
 
 	public:
-		/* canonical form */
 		/* default constructor */
 		random_access_iterator( void ) : _ptr(NULL) { return ; }
-		/* basic constructor */
-		
+		random_access_iterator( pointer src ) : _ptr(src) {}
+
+		/* copy constructor */
 		random_access_iterator( const random_access_iterator &src ) : _ptr(src._ptr) { return ; }
-		random_access_iterator( pointer src ) : _ptr(src) {} // ajout cas ptr en arg
+
+		/* destructor */
 		~random_access_iterator( void ) { return ; }
+
+		/* assignment operator */
 		random_access_iterator	&operator=( const random_access_iterator &src )
 		{
 			if ( this != &src )
@@ -40,23 +52,15 @@ namespace ft
 			}
 			return ( *this );
 		}
-		pointer base() const { return ( _ptr ); } // ajout
+		pointer base() const { return ( _ptr ); }
 
 		/* 
-		implementation https://en.cppreference.com/w/cpp/named_req/RandomAccessIterator 
-		https://en.cppreference.com/w/cpp/language/operators
+		* implementation https://en.cppreference.com/w/cpp/named_req/RandomAccessIterator
+		* https://en.cppreference.com/w/cpp/language/operators
 		*/
 
-
-		reference	operator*( void ) const // ajout const
-		{
-			return ( *_ptr );
-		}
-		pointer	operator->( void ) const // ajout const
-		{
-			return ( &( operator*() ) );
-		}
-
+		reference	operator*( void ) const { return ( *_ptr ); }
+		pointer	operator->( void ) const { return ( &( operator*() ) ); }
 
 		random_access_iterator	&operator+=( const difference_type n )
 		{
@@ -64,7 +68,8 @@ namespace ft
 			return ( *this );
 		}
 
-		random_access_iterator	operator+( const difference_type n ) const // a + n
+		/* a + n case */
+		random_access_iterator	operator+( const difference_type n ) const
 		{
 			return ( _ptr + n );
 		}
@@ -75,31 +80,35 @@ namespace ft
 			return ( *this );
 		}
 
-		random_access_iterator	operator-( const difference_type n ) const // a - n
+		/* a - n case */
+		random_access_iterator	operator-( const difference_type n ) const
 		{
 			return ( _ptr - n );
 		}
 
-//prefix increment
+		/* prefix increment */
 		random_access_iterator	&operator++( void )
 		{
 			++_ptr;
 			return ( *this );
 		}
-// postfix increment
+
+		/* postfix increment */
 		random_access_iterator	operator++( int )
 		{
 			random_access_iterator tmp = *this;
 			_ptr++;
 			return ( tmp );
 		}
-// prefix decrement
+
+		/* prefix decrement */
 		random_access_iterator	&operator--( void )
 		{
 			--_ptr;
 			return ( *this );
 		}
-// postfix decrement
+
+		/* postfix decrement */
 		random_access_iterator	operator--( int )
 		{
 			random_access_iterator tmp = *this;
@@ -107,37 +116,16 @@ namespace ft
 			return ( tmp );
 		}
 
-		bool	operator==( const random_access_iterator &rhs ) const
-		{
-			return ( _ptr == rhs._ptr ); // return true or false selon si == ou non
-		}
-		bool	operator!=( const random_access_iterator &rhs ) const
-		{
-			return ( _ptr != rhs._ptr ); // return true or false selon si != ou non
-		}
-		bool	operator<( const random_access_iterator  &rhs ) const
-		{
-			return ( _ptr < rhs._ptr );
-		}
-		bool	operator<=( const random_access_iterator &rhs ) const
-		{
-			return ( _ptr <= rhs._ptr );
-		}
-		bool	operator>( const random_access_iterator &rhs ) const
-		{
-			return ( _ptr > rhs._ptr );
-		}
-		bool	operator>=( const random_access_iterator &rhs ) const
-		{
-			return ( _ptr >= rhs._ptr );
-		}
+		bool	operator==( const random_access_iterator &rhs ) const { return ( _ptr == rhs._ptr ); }
+		bool	operator!=( const random_access_iterator &rhs ) const { return ( _ptr != rhs._ptr ); }
+		bool	operator<( const random_access_iterator  &rhs ) const { return ( _ptr < rhs._ptr ); }
+		bool	operator<=( const random_access_iterator &rhs ) const { return ( _ptr <= rhs._ptr ); }
+		bool	operator>( const random_access_iterator &rhs ) const { return ( _ptr > rhs._ptr ); }
+		bool	operator>=( const random_access_iterator &rhs ) const { return ( _ptr >= rhs._ptr ); }
 
-		reference	operator[]( const difference_type n )
-		{
-			return ( *(_ptr + n) );
-		}
+		reference	operator[]( const difference_type n ) { return ( *(_ptr + n) ); }
 
-		// A commenter => operateur de conversion en const
+		/* const conversion operator return a const iterator container _ptr with a const value */
 		operator	random_access_iterator<const value_type>() const { return ( random_access_iterator<const value_type>(_ptr) ); }
 
 	};
@@ -185,10 +173,10 @@ namespace ft
 	}
 
 	/*
-	specific case of the STL which state that a subtraction between two iterators should be possible
-	the return value is difference type = a - b
-	https://www.cplusplus.com/reference/iterator/RandomAccessIterator/
-	https://en.cppreference.com/w/cpp/named_req/RandomAccessIterator 
+	* specific case of the STL which state that a subtraction between two iterators should be possible
+	* the return value is difference type = a - b
+	* https://www.cplusplus.com/reference/iterator/RandomAccessIterator/
+	* https://en.cppreference.com/w/cpp/named_req/RandomAccessIterator 
 	*/
 	template<typename T>
 	typename ft::random_access_iterator<T>::difference_type	operator-( const ft::random_access_iterator<T> &lhs, const ft::random_access_iterator<T> &rhs )

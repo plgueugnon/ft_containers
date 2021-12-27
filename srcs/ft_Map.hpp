@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_Map.hpp                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: pgueugno <pgueugno@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/12/27 19:49:28 by pgueugno          #+#    #+#             */
+/*   Updated: 2021/12/27 19:49:39 by pgueugno         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef __FT_MAP_H__
 #define __FT_MAP_H__
 
@@ -10,10 +22,9 @@ namespace ft
 	class map
 	{
 		public:
-			// types:
 			typedef Key															key_type;
 			typedef T															mapped_type;
-			typedef ft::pair<Key, T>										value_type;
+			typedef ft::pair<Key, T>											value_type;
 			typedef Compare														key_compare;
 			typedef Allocator													allocator_type;
 			typedef typename Allocator::reference								reference;
@@ -46,7 +57,7 @@ namespace ft
 
 		public:
 
-			// 23.3.1.1 construct/copy/destroy:
+			/* construct/copy/destroy */
 			explicit map(const Compare& comp = Compare(), const Allocator& a = Allocator())
 						: _tree(comp), _alloc(a) {}
 	
@@ -59,7 +70,7 @@ namespace ft
 			}
 
 			map(const map<Key,T,Compare,Allocator>& x) : _tree(x._tree), _alloc(x._alloc) {}
-			~map() {}// pe a mettre en virtual
+			~map() {}
 
 			map<Key,T,Compare,Allocator>& operator=(const map<Key,T,Compare,Allocator>& x)
 			{
@@ -72,7 +83,7 @@ namespace ft
 				return ( *this );
 			}
 
-			// iterators:
+			/* iterators */
 			iterator	begin() { return ( (_tree.begin()) ); }
 			const_iterator	begin() const { return ( (_tree.begin()) ); }
 			iterator	end() { return ( (_tree.end()) ); }
@@ -82,12 +93,12 @@ namespace ft
 			reverse_iterator	rend() { return ( (_tree.rend()) ); }
 			const_reverse_iterator	rend() const { return ( (_tree.rend()) ); }
 
-			// capacity:
+			/* capacity */
 			bool	empty() const { return ( size() == 0 ); }
 			size_type	size() const { return ( _tree.size() ); }
 			size_type	max_size() const { return ( _tree.max_size() ); }
 
-			// // 23.3.1.2 element access:
+			/* element access */
 			T& operator[](const key_type& x)
 			{
 				iterator it = find(x);
@@ -96,7 +107,7 @@ namespace ft
 				return ( it->second );
 			}
 
-			// modifiers:
+			/* modifiers */
 			ft::pair<iterator, bool>	insert(const value_type& x)
 			{
 				ft::pair<iterator, bool> res =_tree.insert(x);
@@ -131,11 +142,11 @@ namespace ft
 
 			void clear() { _tree.clear(); }
 
-			// // observers:
+			/* observers */
 			key_compare key_comp() const { return ( _comp ); }
 			value_compare value_comp() const { return ( _comp ); }
 
-			// 23.3.1.3 map operations:
+			/* map operations */
 			iterator find(const key_type& x) { return ( iterator( _tree.find(x)) ); }
 			const_iterator find(const key_type& x) const { return ( const_iterator( _tree.find(x)) ); }
 
@@ -150,6 +161,7 @@ namespace ft
 				return ( n );
 			}
 
+			/* returns iterator to first node before */
 			iterator lower_bound(const key_type& x)
 			{
 				iterator first = begin();
@@ -176,6 +188,7 @@ namespace ft
 				return (first);
 			}
 
+			/* returns iterator to first node after */
 			iterator upper_bound(const key_type& x)
 			{
 				iterator first = begin();
@@ -217,7 +230,7 @@ namespace ft
 		typename map<Key, T, Compare, Allocator>::const_iterator	ite = lhs.end();
 		typename map<Key, T, Compare, Allocator>::const_iterator	it2 = rhs.begin();
 
-		while (it != ite && it2 != rhs.end()) // cas particulier lié a end()
+		while (it != ite && it2 != rhs.end())
 		{
 			if (it->first != it2->first || it->second != it2->second)
 				return (false);

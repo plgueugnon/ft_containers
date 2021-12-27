@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   BST.hpp                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: pgueugno <pgueugno@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/12/27 19:38:08 by pgueugno          #+#    #+#             */
+/*   Updated: 2021/12/27 19:38:09 by pgueugno         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef __BST_H__
 #define __BST_H__
 
@@ -14,58 +26,63 @@ namespace ft
 	class BST
 	{
 		public:
-			/* basic typedef of MAP */
-			// typedef Key										key_type; // cle de tri
-			// typedef T										mapped_type; // valeur trie
-			// typedef ft::pair<const Key, T>					value_type; // valeur contenu dans les nodes
+			/*
+			* basic typedef of MAP
+			* T being the pair object wrapper containing
+			* key_type as the sorting key used in the BST
+			* and mapped_type as the value being sorted
+			* Compare is the usual boolean comparison object used in map, by default set on <
+			*/
 			typedef T										value_type;
 			typedef typename T::first_type					key_type;
 			typedef typename T::second_type					mapped_type;
-			typedef Compare									key_compare; // boolen de comparaison a < b
+			typedef Compare									key_compare;
 
 			/* typedef of RB_tree node */
-			typedef	ft::BST_node<value_type>				node_type; // contenu d'une node
-			// typedef	ft::BST_node<const value_type>				const_node_type;
-			typedef node_type*								node_pointer; // ptr sur node
+			typedef	ft::BST_node<value_type>				node_type;
+			typedef node_type*								node_pointer;
 			typedef node_type&								node_reference;
-			// typedef std::allocator<node_type>				node_allocator; // allocator de node
-			/* revient à dire typedef std::allocator<node_type>	node_allocator; */
+
+			/* 
+			* below expression is identical to typedef std::allocator<node_type>	node_allocator;
+			*/
 			typedef typename Allocator::template rebind<node_type>::other node_allocator;
 
-
 			/* pointer & reference */
-			// typedef Allocator								allocator_type;
 			typedef typename Allocator::reference			reference;
 			typedef typename Allocator::const_reference 	const_reference;
 			typedef typename Allocator::pointer				pointer;
 			typedef typename Allocator::const_pointer		const_pointer;
 
 			/* iterators */
-			typedef ft::BST_iterator<node_type>						iterator;
-			typedef ft::BST_const_iterator<node_type>				const_iterator; // erreur ici en enlevant const
-			typedef ft::reverse_iterator<iterator>				reverse_iterator;
-			typedef ft::reverse_iterator<const_iterator>		const_reverse_iterator;
+			typedef ft::BST_iterator<node_type>				iterator;
+			typedef ft::BST_const_iterator<node_type>		const_iterator;
+			typedef ft::reverse_iterator<iterator>			reverse_iterator;
+			typedef ft::reverse_iterator<const_iterator>	const_reverse_iterator;
 
 			typedef std::size_t								size_type;
 			typedef ptrdiff_t								difference_type;
 
 
+		/*
+		* key attributes used in the BST
+		* _root value is by default always the first node at the beginning of the tree and
+		* is used as starting point of almost every operations in our BST
+		* _comp object is used in case Compare object used in map is reversed
+		*/
 		private:
-			node_pointer		_root; // ptr sur node // sert de point depart depuis le haut de l'arbre pour chaque operation
+			node_pointer		_root;
 			size_type			_size;
 			node_allocator		_node_alloc;
 			key_compare			_comp;
 
 
 		public:
-
-			/* construit node a partir comparateur booleen Compare */
 			/* Member type key_compare is the internal comparison object type used by the container */
 			BST(const key_compare &c = key_compare())
 			{
-				// a voir si obligatoire de allocate un node null pour que marche
-				_root = nullptr; // init la root sur NULL car arbre vide / avec 1 seule node
-				_comp = c; // stocke la premiere valeur clé
+				_root = nullptr;
+				_comp = c;
 				_size = 0;
 			} 
 
@@ -75,13 +92,15 @@ namespace ft
 				_size = 0;
 				insert(x.begin(), x.end());
 			}
+
 			/* assignment operator */
 			BST	&operator=(const BST &x)
 			{
 				if (*this != x)
-					_root = x._root; // simple swap d'adresse ici mais recopie complete arbre dans map
+					_root = x._root;
 				return ( *this );
 			}
+
 			/* destructor */
 			virtual ~BST() { clear(); }
 
@@ -89,7 +108,7 @@ namespace ft
 			iterator insert(iterator position, const value_type &v)
 			{
 				(void)position;
-				return ( _node_insert(_root , v) ); // a verif mais en principe suffit
+				return ( _node_insert(_root , v) );
 			}
 
 			template<class InputIterator>
@@ -110,6 +129,7 @@ namespace ft
 			size_type	size() const { return ( _size ); }
 			size_type	max_size() const { return ( _node_alloc.max_size() ); }
 
+			/* returns a pointer to min value in tree */
 			node_pointer	LeftMost(node_pointer root) const
 			{
 				node_pointer iter = root;
@@ -121,6 +141,7 @@ namespace ft
 				return ( iter );
 			}
 
+			/* returns a pointer to max value in tree */
 			node_pointer	RightMost(node_pointer root) const
 			{
 				node_pointer iter = root;
@@ -132,12 +153,14 @@ namespace ft
 				return ( iter );
 			}
 
+			/* clear entire tree */
 			void	clear() 
 			{
 				_destroy(_root);
 				_size = 0;
 			}
 
+			/* iterators */
 			iterator	begin() { return ( iterator(LeftMost(_root)) ); }
 			const_iterator begin() const { return ( const_iterator(LeftMost(_root)) ); }
 			iterator	end() { return ( iterator(NULL, RightMost(_root)) ); }
@@ -147,26 +170,41 @@ namespace ft
 			reverse_iterator	rend() { return ( reverse_iterator(begin()) ); }
 			const_reverse_iterator	rend() const { return ( const_reverse_iterator(begin()) ); }
 
+			/* erase */
+
+			/*
+			* Following function manages all cases of node deletion non recursively
+			* Case 1 : if node to delete has two childs
+			*	then find leftmost value of its right child and takes its value
+			*	then delete child whose value has been copied but after updating pointer to its child
+			*	but if child to be deleted as no child of his own, we update node pointer to null
+			* Case 2: if node to delete has only one, or no child
+			*	then we update its child parent to be the node own parent
+			*	if the parent is null, its mean node to be deleted is _root is such case we update _root with its child
+			*	if node to delete as no child, we simply set its parent node pointer to it to null
+			*	if right or left child is not null, we update node's parent node to point to node's child
+			*	and last, if only _root is left we simply delete it
+			*/
 			void erase(iterator position)
 			{
 				if (position == end() || !_size )
 					return ;
-				node_pointer del = _searchNode(_root, position->first); // si position != null va chercher ptr a suppr
-				if (del->left && del->right) // si node a deux fils (case 1)
+				node_pointer del = _searchNode(_root, position->first);
+				if (del->left && del->right)
 				{
-					node_pointer child = LeftMost(del->right); // va cherche le plus a gauche depuis droite
-					del->value = child->value; // copie valeur trouve dans node vise par suppr
-					if (child->right)// si fils droite de node qui va etre suppr (child)
+					node_pointer child = LeftMost(del->right);
+					del->value = child->value;
+					if (child->right)
 					{
-						child->right->parent = del; // node visee par suppr (del) devient son parent
-						del->right = child->right; // actualise fils droite avec fils droite de node qui va etre suppr
+						child->right->parent = del;
+						del->right = child->right;
 					}
 					else if (child->left)
 					{
 						child->left->parent = del;
 						del->left = child->left;
 					}
-					if (!child->right && !child->left) // si aucun fils (parent seul), je set a null le ptr sur le fils qui va etre suppr (pr eviter acces lecture valeur suppr)
+					if (!child->right && !child->left)
 					{
 						if (child->parent->right == child)
 							child->parent->right = NULL;
@@ -177,32 +215,32 @@ namespace ft
 					_node_alloc.deallocate(child, 1);
 					_size--;
 				}
-				else // node a un seul, ou aucun fils (case 2)
+				else
 				{
-					node_pointer child = (del->left != NULL) ? del->left : del->right; // child prend adresse fils non nul
+					node_pointer child = (del->left != NULL) ? del->left : del->right;
 					if (child)
 					{
-						child->parent = del->parent; // parent du fils devient celui node a suppr
-						if (!child->parent) // si parent null => veut dire que node a suppr == root
+						child->parent = del->parent;
+						if (!child->parent)
 						{
 							_node_alloc.destroy(del);
 							_node_alloc.deallocate(del, 1);
 							del = child;
-							_root = child; // actualise root sur fils droite ou gauche non nul
+							_root = child;
 							_size--;
 							return ;
 						}
 					}
-					else if (del->parent) // si aucun fils, node va simplement etre suppr => besoin de set ptr de son parent sur null
+					else if (del->parent)
 					{
 						if (del->parent->right == del)
 							del->parent->right = NULL;
 						if (del->parent->left == del)
 							del->parent->left = NULL;
 					}
-					if (del->left) // si fils droit != null
+					if (del->left)
 					{
-						if (del->parent->left == del) // si fils parent est del => actualise ptr sur child
+						if (del->parent->left == del)
 							del->parent->left = child;
 						else
 							del->parent->right = child;
@@ -214,7 +252,7 @@ namespace ft
 						else
 							del->parent->left = child;
 					}
-					if (del == _root && !del->right && !del->left) // si il ne reste que root sur l'arbre
+					if (del == _root && !del->right && !del->left)
 					{
 						_node_alloc.destroy(del);
 						_node_alloc.deallocate(del, 1);
@@ -239,12 +277,14 @@ namespace ft
 				}
 				return ( 0 );
 			}
+
+			/* we update iterator value after deleting preceding node */
 			void erase(iterator first, iterator last)
 			{
 				for (; first != last;)
 				{
 					iterator tmp = first;
-					++tmp; // pour eviter increment en trop par tour
+					++tmp;
 					erase(first);
 					first = tmp;
 				}
@@ -261,24 +301,32 @@ namespace ft
 		/* assist functions */
 		protected:
 
+			/* will find node with corresponding key going left if possible, otherwise right */
 			node_pointer	_searchNode(node_pointer node, const key_type &k) const
 			{
 				node_pointer res = node;
-				while ( res ) // res != NULL
+				while ( res )
 				{
-					if ( res->value.first == k ) // si cle trouvee
+					if ( res->value.first == k )
 						return ( res );
-					else if (k < res->value.first) // sinon avance droite ou gauche
+					else if (k < res->value.first) 
 						res = res->left;
 					else
 						res = res->right;
 				}
-				return ( NULL ); // si rien n'est trouvé => null
+				return ( NULL );
 			}
 
+			/*
+			* Insert assist function, if _root is null, tree is empty
+			* otherwise searches for a node with the same key prior to insertion
+			* if key is found, returns an iterator to node with same key and boolean value set to false
+			* if key is not found, insert value under closest node with a superior key and
+			* returns iterator to newly insert node with boolean value set to true
+			*/
 			ft::pair<iterator, bool>	_node_insert(node_pointer node, const value_type &k)
 			{
-				if (_root == NULL) // si arbre vide
+				if (_root == NULL)
 				{
 					_root = _node_alloc.allocate(1);
 					_node_alloc.construct(_root, node_type(k));
@@ -289,28 +337,29 @@ namespace ft
 				{
 					node_pointer current = node;
 					node_pointer parent = NULL;
-					while (current) // je cherche la node
+					while (current)
 					{
-						parent = current; // prend addresse root / pt depart insertion
-						if ( _comp(k.first, current->value.first) ) // we use object comp here because it stands for < by default but can be inverted
+						parent = current;
+						if ( _comp(k.first, current->value.first) )
 							current = current->left;
 						else if ( _comp(current->value.first, k.first) )
 							current = current->right;
 						else
-							return ( ft::pair<iterator, bool>(iterator(current), false) ); // renvoie un iterateur sur la position dans l'arbre avec faux car key deja existant
+							return ( ft::pair<iterator, bool>(iterator(current), false) );
 					}
 					current = _node_alloc.allocate(1);
 					_node_alloc.construct(current, node_type(k));
 					_size++;
-					if ( _comp(k.first, parent->value.first) ) // si inf => fils gauche
+					if ( _comp(k.first, parent->value.first) )
 						parent->left = current;
 					else
 						parent->right = current;
-					current->parent = parent; // set le parent
-					return ( ft::pair<iterator, bool>(iterator(current), true) ); // renvoie iterator true si nouvelle node créée
+					current->parent = parent;
+					return ( ft::pair<iterator, bool>(iterator(current), true) );
 				}
 			}
 
+			/* assist function that clears the entire tree of its node */
 			void	_destroy(node_pointer& root)
 			{
 				if (root)

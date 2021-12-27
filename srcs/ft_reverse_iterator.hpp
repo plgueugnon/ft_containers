@@ -1,22 +1,31 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_reverse_iterator.hpp                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: pgueugno <pgueugno@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/12/27 20:18:38 by pgueugno          #+#    #+#             */
+/*   Updated: 2021/12/27 20:18:39 by pgueugno         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef __FT_REVERSE_ITERATOR_H__
 #define __FT_REVERSE_ITERATOR_H__
-
-#include <iostream> // a SUPPR
 
 #include "ft_iterator.hpp"
 #include "ft_random_access_iterator.hpp"
 
 namespace ft
 {
-
-		/* source reference : ISO+IEC+14882-1998 */
+	/* source reference : ISO+IEC+14882-1998 */
 	template<class Iterator>
 	class reverse_iterator
 	{
 
 	public:
 
-		typedef Iterator iterator_type; // NORME ISO a voir si utile
+		typedef Iterator iterator_type;
 		typedef typename ft::iterator_traits<Iterator>::iterator_category	iterator_category;
 		typedef typename ft::iterator_traits<Iterator>::value_type			value_type;
 		typedef typename ft::iterator_traits<Iterator>::difference_type		difference_type;
@@ -27,9 +36,9 @@ namespace ft
 		Iterator _current;
 
 	public:
-		/* canonical form */
 		/* default constructor */
 		reverse_iterator( void ) : _current(NULL) { return ; }
+		
 		/* basic constructor */
 		explicit reverse_iterator( Iterator x ) : _current(x) { return ; }
 
@@ -44,7 +53,6 @@ namespace ft
 			_current = u.base();
 			return ( *this );
 		}
-
 
 		reference operator*( void ) const 
 		{
@@ -66,15 +74,13 @@ namespace ft
 			--_current;
 			return ( tmp );
 		}
-
 		reverse_iterator &operator+=( const difference_type n )
 		{
 			_current -= n;
 			return ( *this );
 		}
-		// force cast retour en reverse iterator
-		reverse_iterator operator-( difference_type n ) const { return reverse_iterator( _current + n ); }
 
+		reverse_iterator operator-( difference_type n ) const { return reverse_iterator( _current + n ); }
 		reverse_iterator &operator--( void )
 		{
 			++_current;
@@ -86,40 +92,21 @@ namespace ft
 			_current++;
 			return ( tmp );
 		}
-
 		reverse_iterator &operator-=( const difference_type n )
 		{
 			_current += n;
 			return ( *this );
 		}
 
-		bool operator==( const ft::reverse_iterator<Iterator>& x) const
-		{
-			return ( _current == x._current );
-		}
-		bool operator!=( const reverse_iterator<Iterator>& x) const
-		{
-			return ( _current != x._current );
-		}
-		bool operator<( const reverse_iterator<Iterator>& x) const
-		{
-			return ( _current > x._current );
-		}
-		bool operator<=( const reverse_iterator<Iterator>& x) const
-		{
-			return ( _current >= x._current );
-		}
-		bool operator>( const reverse_iterator<Iterator>& x) const
-		{
-			return ( _current < x._current );
-		}
-		bool operator>=( const reverse_iterator<Iterator>& x) const
-		{
-			return ( _current <= x._current );
-		}
-
+		bool operator==( const ft::reverse_iterator<Iterator>& x) const { return ( _current == x._current ); }
+		bool operator!=( const reverse_iterator<Iterator>& x) const { return ( _current != x._current ); }
+		bool operator<( const reverse_iterator<Iterator>& x) const { return ( _current > x._current ); }
+		bool operator<=( const reverse_iterator<Iterator>& x) const { return ( _current >= x._current ); }
+		bool operator>( const reverse_iterator<Iterator>& x) const { return ( _current < x._current ); }
+		bool operator>=( const reverse_iterator<Iterator>& x) const { return ( _current <= x._current ); }
 	};
 
+	/* templating with two different class allows comparison with const and no const iterators */
 	template<class Iterator1, class Iterator2>
 	bool operator==( const ft::reverse_iterator<Iterator1>& x, const ft::reverse_iterator<Iterator2>& y)
 	{
@@ -177,7 +164,6 @@ namespace ft
 	{
 		return ( x + n);
 	}
-
 }
 
 #endif // __FT_REVERSE_ITERATOR_H__

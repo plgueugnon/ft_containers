@@ -1,9 +1,17 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_utils.hpp                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: pgueugno <pgueugno@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/12/27 21:22:59 by pgueugno          #+#    #+#             */
+/*   Updated: 2021/12/27 21:23:00 by pgueugno         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef __FT_UTILS_H__
 #define __FT_UTILS_H__
-
-// #include "ft_iterator.hpp"
-// #include "ft_random_access_iterator.hpp"
-// #include "ft_type_resolution.hpp"
 
 namespace ft
 {
@@ -125,13 +133,6 @@ namespace ft
 	template <class T1, class T2>
 	bool operator>=(const pair<T1,T2>& lhs, const pair<T1,T2>& rhs)
 	{ return !( lhs < rhs ); }
-	
-	// template <class T1, class T2>
-	// pair<T1,T2> make_pair(const T1 &x, const T2 &y)
-	// {
-	// 	return ( pair<T1, T2>(x, y) );
-	// }
-
 
 }
 

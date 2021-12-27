@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_Vector.hpp                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: pgueugno <pgueugno@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/12/27 21:13:20 by pgueugno          #+#    #+#             */
+/*   Updated: 2021/12/27 21:13:21 by pgueugno         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef __FT_VECTOR_H__
 #define __FT_VECTOR_H__
 
@@ -15,65 +27,68 @@ namespace ft {
 		public:
 			typedef T																value_type;
 			typedef Allocator														allocator_type;
-
 			typedef typename allocator_type::reference								reference;
 			typedef typename allocator_type::const_reference						const_reference;
 			typedef typename allocator_type::pointer								pointer;
 			typedef typename allocator_type::const_pointer							const_pointer;
-
-			typedef  ft::random_access_iterator<value_type>							iterator; // je defini ce qu'est un iterator pour allocator
+			typedef  ft::random_access_iterator<value_type>							iterator;
 			typedef  ft::random_access_iterator<const value_type>					const_iterator;
 			typedef  ft::reverse_iterator<iterator>									reverse_iterator;
 			typedef  ft::reverse_iterator<const_iterator>							const_reverse_iterator;
+			typedef	std::size_t														size_type;
+			typedef	std::ptrdiff_t													difference_type;
 
-			typedef	std::size_t								size_type; // a check si ces deux alias suffisent pour simplifier les valeurs de retours
-			typedef	std::ptrdiff_t	difference_type;
 
-
-			/* 
-			capacity = size of the currently allocated storage capacity 
-			size = number of elements currently present in the vector
-			
-			*/
+		/* 
+		* capacity = size of the currently allocated storage capacity 
+		* size = number of elements currently present in the vector
+		* _buffer = is equivalent to T* _buffer, it is an array that we used to store values
+		*/
 		private:
-			allocator_type		_allocator; // equivaut a declarer un objet _allocator de class allocator 
-			pointer				_buffer; // equivaut a dire T* _buffer
-			size_type			_size; // longueur du vector instancié
-			size_type			_capacity; // n element que je peux stocker avant de devoir reallouer
+			allocator_type		_allocator; 
+			pointer				_buffer;
+			size_type			_size;
+			size_type			_capacity;
 
 
 		public:
 
-			/* 1 - construct/copy/destroy */
+			/* constructors */
 
 			/* default constructor */
 			explicit vector(const allocator_type& a = allocator_type()) : _allocator(a), _buffer(NULL), _size(0), _capacity(0) {}
+			
 			/* fill constructor */
+			
+			/*
+			* in the following case, is the same as writing ::operateur new(n * sizeof(T)) and then returning T* (a pointer to allocator object)
+			* instead of creating an object of type T, we first allocated enough space for n object of type T without instanciation (constructor call)
+			* then we instanciate n object T and store our value in it
+			* the if check is to avoid allocating objects of size 0 (still a leak)
+			*/
 			explicit vector(size_type n, const value_type& value = value_type(), const allocator_type& a = allocator_type()) : _allocator(a), _buffer(NULL), _size(n), _capacity(n)
 			{
-				// equivaut a ecrire ::operateur new(n * sizeof(T)) et a renvoyer un T* (ptr sur objet allocator en l'occurence)
-				// plutot que de construire un objet de type T, on a d'abord alloué l'espace pour n type T sans en creer d'instance (donc sans appel du constructor)
-				// puis on va creer une instance pour n objet T et y stocker la value correspondante
-				if (n) // pour eviter allocation de 0 bytes
+				if (n)
 					_buffer = _allocator.allocate(n);
 				for(size_type i = 0; i < n; i++)
 					_allocator.construct(&_buffer[i], value);
 			}
 
 			/* range constructor */
+
 			/*
-			on the use of a void ** as second argument for enable if
-			https://stackoverflow.com/questions/29040059/enable-if-to-add-a-function-parameter-that-has-a-default-argument
+			* on the use of a void ** as second argument for enable if
+			* https://stackoverflow.com/questions/29040059/enable-if-to-add-a-function-parameter-that-has-a-default-argument
 			*/
 			template<class InputIterator>
 			vector(InputIterator first, InputIterator last, const allocator_type& a = allocator_type(), 
-					typename ft::enable_if<!ft::is_integral<InputIterator>::value, void **>::type = nullptr) // a retravailler + recheck la logique
+					typename ft::enable_if<!ft::is_integral<InputIterator>::value, void **>::type = nullptr)
 					: _allocator(a), _buffer(NULL), _size(0), _capacity(ft::distance(first, last))
 			{
-				if (_capacity)  // pour eviter allocation de 0 bytes
+				if (_capacity)
 					_buffer = _allocator.allocate(_capacity);
 				for(; first != last; first++)
-					_allocator.construct(&_buffer[_size++], *first); // size sera incremente a meme valeur que capacity a fin construction
+					_allocator.construct(&_buffer[_size++], *first);
 			}
 
 			/* copy constructor */
@@ -89,16 +104,18 @@ namespace ft {
 			~vector()
 			{
 				for(size_type i = 0; i < _size; i++)
-					_allocator.destroy(&_buffer[i]); // appel le destructeur de chacun des elements instanciés
+					_allocator.destroy(&_buffer[i]);
 				if (_buffer)
-					_allocator.deallocate(_buffer, _capacity); // je free mon buffer de l'ensemble de sa capacité
+					_allocator.deallocate(_buffer, _capacity);
 			}
 
-/*********************************************************************/
-			/* 2 - iterators */
-			/* each one will return an iterator pointing to a position in the vector 
-			here represented by the allocated space _vector. Using simple pointer arithmetics 
-			we will get an iterator on the beginning or the end */
+			/* iterators */
+
+			/* 
+			* each one will return an iterator pointing to a position in the vector 
+			* here represented by the allocated space _vector. Using simple pointer arithmetics 
+			* we will get an iterator on the beginning or the end
+			*/
 			iterator			begin() { return ( iterator( _buffer ) ); }
 			const_iterator		begin() const { return ( const_iterator( _buffer ) ); }
 			iterator			end() { return ( iterator( _buffer + _size ) ); }
@@ -108,8 +125,7 @@ namespace ft {
 			reverse_iterator		rend() { return ( reverse_iterator( _buffer ) ); }
 			const_reverse_iterator	rend() const { return ( const_reverse_iterator( _buffer ) ); }
 
-/*********************************************************************/
-
+			/* reserve more space if capacity is not sufficient */
 			void	reserve( size_type n )
 			{
 				if ( n > max_size() )
@@ -128,12 +144,12 @@ namespace ft {
 				}
 			}
 
+			/* insert values */
 			iterator	insert(iterator position, const T& x)
 			{
-				// std::cout << "\ncheck1\n";
 				difference_type offset = ft::distance(begin(), position);
 				reserve( _size + 1 );
-				pointer last = _buffer + _size; // check si pas problème lié decalage
+				pointer last = _buffer + _size;
 				pointer first = _buffer;
 				while ( last != first + offset )
 				{
@@ -147,16 +163,15 @@ namespace ft {
 			}
 
 			/* 
-				we insert n elements x at position, thus moving every elements to
-				the right of position by n and then we insert n times x elements
+			* we insert n elements x at position, thus moving every elements to
+			* the right of position by n and then we insert n times x elements
 			*/
 			void	insert(iterator position, size_type n, const T& x)
 			{
-				// std::cout << "\ncheck2\n";
 				difference_type offset = ft::distance(begin(), position);
 				reserve( _size + n );
 				pointer last = _buffer + _size;
-				pointer first = _buffer; // check si pas problème lié decalage
+				pointer first = _buffer;
 				while ( last != first + offset )
 				{
 					_allocator.construct(last + n - 1, *(last - 1));
@@ -172,11 +187,10 @@ namespace ft {
 			void	insert(iterator position, InputIterator first, InputIterator last,
 					typename ft::enable_if<!ft::is_integral<InputIterator>::value, void **>::type = nullptr)
 			{
-				// std::cout << "\ncheck3\n";
 				difference_type offset = ft::distance(begin(), position);
 				size_type n = ft::distance(first, last);
 				reserve( _size + n );
-				pointer last_object = _buffer + _size; // check si pas problème lié decalage
+				pointer last_object = _buffer + _size;
 				pointer first_object = _buffer;
 
 				while ( last_object != first_object + offset )
@@ -190,34 +204,37 @@ namespace ft {
 				_size += n;
 			}
 
+			/* erase values */
 			iterator	erase(iterator position)
 			{
 				difference_type offset = ft::distance(begin(), position);
 				for (size_type i = offset; i < _size - 1; i++)
 				{
-					_allocator.destroy(&_buffer[i]); // je detruis la position
-					_allocator.construct(&_buffer[i], _buffer[i + 1]); // je decale tout de 1 vers la gauche
+					_allocator.destroy(&_buffer[i]);
+					_allocator.construct(&_buffer[i], _buffer[i + 1]);
 				}
 				_allocator.destroy( &_buffer[ _size - 1] );
 				_size--;
-				return ( &_buffer[offset] ); // je renvoie la nouvelle valeur
+				return ( &_buffer[offset] );
 			}
 
-			// index: 0|1|2|3|4|5|6|7|8|9
-			// value: 1|2|3|4|5|6|7|8|9|10
-			//        f   l
+			/*
+			* destroys all element starting from the beginning,
+			* then move all elements int the array from n value deleted to the left
+			* then delete duplicates values at the end
+			*/
 			iterator	erase(iterator first, iterator last)
 			{
-				difference_type offset = ft::distance(begin(), first); // 0
-				difference_type deleted = ft::distance(first, last); // 2
-				for (size_type i = offset; i < _size - deleted; i++) // 10 - 2
+				difference_type offset = ft::distance(begin(), first);
+				difference_type deleted = ft::distance(first, last);
+				for (size_type i = offset; i < _size - deleted; i++)
 				{
-					_allocator.destroy(&_buffer[i]); // je detruis la position depuis 0
-					_allocator.construct(&_buffer[i], _buffer[i + deleted]); // je decale tout de x deleted vers la gauche - 2
-				}
-				for (size_type i = _size - deleted; i < _size; i++) // 10 - 2 = 2 // je supprime les doublons à la fin
 					_allocator.destroy(&_buffer[i]);
-				_size -= deleted; // j'actualise size
+					_allocator.construct(&_buffer[i], _buffer[i + deleted]);
+				}
+				for (size_type i = _size - deleted; i < _size; i++) 
+					_allocator.destroy(&_buffer[i]);
+				_size -= deleted;
 				return ( &_buffer[offset] );
 			}
 
@@ -231,11 +248,10 @@ namespace ft {
 				_size = 0;
 			}
 
-/*********************************************************************/
 			/* assignment operator */
 			vector<T, Allocator>& operator=(const vector<T, Allocator>& x)
 			{
-				if (x != *this) // protection contre autoreferencement
+				if (x != *this)
 				{
 					clear();
 					insert(begin(), x.begin(), x.end());
@@ -243,9 +259,8 @@ namespace ft {
 				return ( *this );
 			}
 
-/*********************************************************************/
-
-			/* assign function - need to erase previous content before assigning new value */
+			/* assign functions - need to erase previous content before assigning new value */
+			
 			/* range assign */
 			template<class InputIterator>
 			void	assign(InputIterator first, InputIterator last, typename ft::enable_if<!ft::is_integral<InputIterator>::value, void **>::type = nullptr)
@@ -264,8 +279,7 @@ namespace ft {
 			/* getter for private variable _allocator */
 			allocator_type	get_allocator() const { return ( _allocator ); }
 
-/*********************************************************************/
-			/* 3 - capacity */
+			/* capacity */
 			size_type	size() const { return ( _size ); }
 			size_type	max_size() const { return ( _allocator.max_size() ); }
 			void		resize(size_type sz, T c = T())
@@ -279,8 +293,7 @@ namespace ft {
 			size_type	capacity() const { return ( _capacity ); }
 			bool	empty() const { return ( !size() ); }
 
-/*********************************************************************/
-			/* 4 - element access */
+			/* element access */
 			reference		operator[](size_type n) { return ( _buffer[n] ); }
 			const_reference	operator[](size_type n) const { return ( _buffer[n] ); }
 			const_reference	at(size_type n) const
@@ -300,21 +313,20 @@ namespace ft {
 			reference		back() { return ( _buffer[size() - 1] ); }
 			const_reference	back() const { return ( _buffer[size() - 1] ); }
 
-/*********************************************************************/
-			/* 5 - modifiers */
+			/* modifiers */
 			void		push_back(const T& x)
 			{
 				if ( _capacity > 0 && _size >= _capacity )
 				{
 					pointer tmp = _allocator.allocate( _capacity * 2 );
 
-					pointer iter = _buffer; // check si pas problème lié decalage
+					pointer iter = _buffer;
 					pointer end = _buffer + _size;
 					pointer iter2 = tmp;
 					while( iter != end )
 					{
 						_allocator.construct(iter2, *iter);
-						_allocator.destroy(iter); // a check si probleme
+						_allocator.destroy(iter);
 						iter++;
 						iter2++;
 					}
@@ -349,7 +361,6 @@ namespace ft {
 
 	};
 
-/*********************************************************************/
 	template<class T, class Allocator>
 	bool	operator==(const vector<T, Allocator>& x, const vector<T, Allocator>& y)
 	{
